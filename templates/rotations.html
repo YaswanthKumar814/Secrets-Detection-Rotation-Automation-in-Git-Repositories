@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Rotations{% endblock %}
+{% block page_title %}Credential Rotations{% endblock %}
+{% block page_subtitle %}Mock rotation and remediation actions{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <button class="btn btn-outline-danger me-2" onclick="rotateCritical()"><i class="bi bi-arrow-repeat me-1"></i>Rotate All Critical</button>
+    <button class="btn btn-outline-info" onclick="loadRotations()"><i class="bi bi-arrow-clockwise me-1"></i>Refresh</button>
+  </div>
+  <div class="col-md-6 text-end">
+    <span id="rotCount" class="badge bg-secondary fs-6">0 actions</span>
+  </div>
+</div>
+
+<div id="rotAlert" class="alert alert-success d-none" role="alert"></div>
+
+<div class="card bg-dark border-secondary">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover mb-0" id="rotTable">
+      <thead>
+        <tr>
+          <th>Secret Type</th>
+          <th>Old (masked)</th>
+          <th>New (masked)</th>
+          <th>Status</th>
+          <th>Attempts</th>
+          <th>Rotated At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+async function loadRotations() {
+  const data = await (await fetch('/api/rotations')).json();
+  const statusColors = {completed:'success',initiated:'warning',failed:'danger',skipped:'secondary'};
+  document.querySelector('#rotTable tbody').innerHTML = data.map(r => `<tr>
+    <td><code>${r.secret_type}</code></td>
+    <td><code class="text-warning">${r.old_masked||'—'}</code></td>
+    <td><code class="text-success">${r.new_masked||'—'}</code></td>
+    <td><span class="badge bg-${statusColors[r.status]||'info'}">${r.status}</span></td>
+    <td>${r.retries||0}</td>
+    <td>${r.initiated_at ? new Date(r.initiated_at).toLocaleString() : '—'}</td>
+    <td>
+      <button class="btn btn-sm btn-outline-warning" onclick="validateOne('${r.secret_type}')">Validate</button>
+    </td>
+  </tr>`).join('');
+  document.getElementById('rotCount').textContent = data.length + ' actions';
+}
+
+async function rotateCritical() {
+  const res = await fetch('/api/rotate-critical', {method:'POST'});
+  const result = await res.json();
+  const el = document.getElementById('rotAlert');
+  el.textContent = `Rotated ${result.rotated || 0} critical secrets.`;
+  el.classList.remove('d-none');
+  setTimeout(() => el.classList.add('d-none'), 4000);
+  loadRotations();
+}
+
+async function validateOne(secretType) {
+  const res = await fetch('/api/validate', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({secret_type:secretType,value:'demo_value'})});
+  const result = await res.json();
+  alert(`Validation result: ${result.status} (${result.detail || 'N/A'})`);
+}
+
+loadRotations();
+</script>
+{% endblock %}

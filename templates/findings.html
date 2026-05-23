@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Findings{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Secret Findings</h1>
+  <p>Grouped findings with confidence, exposure, and MITRE ATT&CK mapping</p>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <select id="severityFilter" class="form-select form-select-sm bg-dark text-light border-secondary">
+      <option value="">All Severities</option>
+      <option value="Critical" {% if filter_severity == 'Critical' %}selected{% endif %}>Critical</option>
+      <option value="High" {% if filter_severity == 'High' %}selected{% endif %}>High</option>
+      <option value="Medium" {% if filter_severity == 'Medium' %}selected{% endif %}>Medium</option>
+      <option value="Low" {% if filter_severity == 'Low' %}selected{% endif %}>Low</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select id="confidenceFilter" class="form-select form-select-sm bg-dark text-light border-secondary">
+      <option value="">All Confidence</option>
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select id="typeFilter" class="form-select form-select-sm bg-dark text-light border-secondary">
+      <option value="">All Types</option>
+    </select>
+  </div>
+  <div class="col-md-3 text-end">
+    <span id="countBadge" class="badge rounded-pill" style="background:var(--gg-surface2);color:var(--gg-text);font-size:0.85rem;padding:0.5rem 0.9rem;">
+      {{ findings|length }} grouped finding{{ 's' if findings|length != 1 else '' }}
+    </span>
+  </div>
+</div>
+
+<div id="findingsEmpty" class="gg-card empty-state" style="display:{% if findings %}none{% else %}block{% endif %};">
+  <i class="bi bi-inbox"></i>
+  <h3 style="font-size:1rem;color:var(--gg-text);">No findings available yet</h3>
+  <p>Run a scan to populate findings: <code class="mono">python main.py scan ./test_repo</code></p>
+  <p style="font-size:0.82rem;">Then refresh this page.</p>
+</div>
+
+<div id="findingsTableWrap" class="gg-card" style="{% if not findings %}display:none{% endif %} overflow-x:auto;">
+  <table class="gg-table" id="findingsTable">
+    <thead>
+      <tr>
+        <th>Severity</th>
+        <th>Type</th>
+        <th>File</th>
+        <th>Line</th>
+        <th>Preview</th>
+        <th>Score</th>
+        <th>Confidence</th>
+        <th>Exposure</th>
+        <th>ATT&CK</th>
+        <th>Count</th>
+        <th>Remediation</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for f in findings %}
+    <tr>
+      <td><span class="sev-badge sev-{{ (f.severity or 'Low')|lower }}">{{ f.severity or 'Low' }}</span></td>
+      <td class="mono">{{ f.secret_type or '—' }}</td>
+      <td class="mono" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;" title="{{ f.file_path or '' }}">{{ f.file_path or '—' }}</td>
+      <td class="mono">{{ f.line_number or '—' }}</td>
+      <td class="mono" style="color:var(--gg-medium);max-width:140px;overflow:hidden;text-overflow:ellipsis;">{{ f.masked_preview or '—' }}</td>
+      <td class="mono">{{ f.severity_score if f.severity_score is not none else '—' }}</td>
+      <td>
+        <span class="conf-badge conf-{{ (f.confidence_label or 'medium')|lower }}">{{ f.confidence_label or 'Medium' }}</span>
+        <small class="text-muted mono">{{ f.confidence_score }}%</small>
+      </td>
+      <td><span class="exp-badge" title="{{ f.exposure_reason or '' }}">{{ f.exposure_level or '—' }}</span></td>
+      <td class="mono" title="{{ f.attack_name or '' }} — {{ f.attack_tactic or '' }}">{{ f.attack_technique or '—' }}</td>
+      <td>{% if (f.occurrence_count or 1) > 1 %}<span class="badge" style="background:var(--gg-purple);color:#fff;">{{ f.occurrence_count }}</span>{% else %}1{% endif %}</td>
+      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);">{{ f.remediation or 'Review and rotate if valid.' }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const INITIAL_FINDINGS = {{ findings | tojson }};
+
+function esc(s) {
+  if (s == null || s === '') return '—';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function sevBadge(s) {
+  const sev = s || 'Low';
+  return `<span class="sev-badge sev-${String(sev).toLowerCase()}">${esc(sev)}</span>`;
+}
+
+function confBadge(label, score) {
+  const c = (label || 'Medium').toLowerCase();
+  return `<span class="conf-badge conf-${c}">${esc(label || 'Medium')}</span> <small class="mono text-muted">${esc(score != null ? score + '%' : '')}</small>`;
+}
+
+function renderTable(data) {
+  const empty = document.getElementById('findingsEmpty');
+  const wrap = document.getElementById('findingsTableWrap');
+  const tbody = document.querySelector('#findingsTable tbody');
+  document.getElementById('countBadge').textContent =
+    data.length + ' grouped finding' + (data.length === 1 ? '' : 's');
+
+  if (!data.length) {
+    empty.style.display = 'block';
+    wrap.style.display = 'none';
+    tbody.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  wrap.style.display = 'block';
+
+  tbody.innerHTML = data.map(f => {
+    const cnt = f.occurrence_count > 1
+      ? `<span class="badge" style="background:var(--gg-purple);color:#fff;">${f.occurrence_count}</span>`
+      : '1';
+    const rem = esc(f.remediation || 'Review and rotate if valid.');
+    return `<tr>
+      <td>${sevBadge(f.severity)}</td>
+      <td class="mono">${esc(f.secret_type)}</td>
+      <td class="mono" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;" title="${esc(f.file_path)}">${esc(f.file_path)}</td>
+      <td class="mono">${esc(f.line_number)}</td>
+      <td class="mono" style="color:var(--gg-medium);max-width:140px;overflow:hidden;text-overflow:ellipsis;">${esc(f.masked_preview)}</td>
+      <td class="mono">${f.severity_score != null ? esc(f.severity_score) : '—'}</td>
+      <td>${confBadge(f.confidence_label, f.confidence_score)}</td>
+      <td><span class="exp-badge" title="${esc(f.exposure_reason)}">${esc(f.exposure_level)}</span></td>
+      <td class="mono" title="${esc(f.attack_name)} — ${esc(f.attack_tactic)}">${esc(f.attack_technique)}</td>
+      <td>${cnt}</td>
+      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);">${rem}</td>
+    </tr>`;
+  }).join('');
+}
+
+let allFindings = INITIAL_FINDINGS;
+
+function populateTypeFilter() {
+  const sel = document.getElementById('typeFilter');
+  const types = [...new Set(allFindings.map(f => f.secret_type).filter(Boolean))].sort();
+  types.forEach(t => {
+    const o = document.createElement('option');
+    o.value = t;
+    o.textContent = t;
+    sel.appendChild(o);
+  });
+}
+
+function applyFilters() {
+  const sev = document.getElementById('severityFilter').value;
+  const conf = document.getElementById('confidenceFilter').value;
+  const typ = document.getElementById('typeFilter').value;
+  renderTable(allFindings.filter(f =>
+    (!sev || f.severity === sev) &&
+    (!conf || f.confidence_label === conf) &&
+    (!typ || f.secret_type === typ)
+  ));
+}
+
+async function refreshFindings() {
+  try {
+    const res = await fetch('/api/findings');
+    if (res.ok) {
+      allFindings = await res.json();
+      const sel = document.getElementById('typeFilter');
+      while (sel.options.length > 1) sel.remove(1);
+      populateTypeFilter();
+      applyFilters();
+    }
+  } catch (e) { /* keep server-rendered data */ }
+}
+
+document.getElementById('severityFilter').addEventListener('change', applyFilters);
+document.getElementById('confidenceFilter').addEventListener('change', applyFilters);
+document.getElementById('typeFilter').addEventListener('change', applyFilters);
+populateTypeFilter();
+applyFilters();
+refreshFindings();
+</script>
+{% endblock %}

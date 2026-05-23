@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Monitoring{% endblock %}
+{% block page_title %}Real-Time Monitoring{% endblock %}
+{% block page_subtitle %}File change events and live secret detection{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card bg-dark border-secondary">
+      <div class="card-body d-flex align-items-center">
+        <i class="bi bi-broadcast text-success fs-3 me-3"></i>
+        <div>
+          <div class="text-muted small">Monitor Status</div>
+          <div id="monStatus" class="fw-bold text-success">Checking...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card bg-dark border-secondary">
+      <div class="card-body d-flex align-items-center">
+        <i class="bi bi-bell text-warning fs-3 me-3"></i>
+        <div>
+          <div class="text-muted small">Total Events</div>
+          <div id="evtTotal" class="fw-bold fs-4">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card bg-dark border-secondary">
+  <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-list-ul me-2"></i>Recent Events</span>
+    <button class="btn btn-sm btn-outline-info" onclick="loadEvents()"><i class="bi bi-arrow-clockwise"></i></button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-dark table-hover mb-0">
+      <thead>
+        <tr><th>Time</th><th>Event</th><th>File</th><th>Detail</th></tr>
+      </thead>
+      <tbody id="evtBody"></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+async function loadEvents() {
+  const data = await (await fetch('/api/monitor-events')).json();
+  document.getElementById('evtTotal').textContent = data.length;
+  document.getElementById('monStatus').textContent = data.length > 0 ? 'Active — events recorded' : 'Idle — no events yet';
+  const colors = {created:'success',modified:'warning',deleted:'danger'};
+  document.getElementById('evtBody').innerHTML = data.slice(0,100).map(e => `<tr>
+    <td class="text-nowrap">${e.created_at ? new Date(e.created_at).toLocaleString() : '—'}</td>
+    <td><span class="badge bg-${colors[e.event_type]||'info'}">${e.event_type}</span></td>
+    <td class="text-truncate" style="max-width:300px" title="${e.file_path}">${e.file_path}</td>
+    <td>${e.detail||'—'}</td>
+  </tr>`).join('');
+}
+loadEvents();
+setInterval(loadEvents, 10000);
+</script>
+{% endblock %}

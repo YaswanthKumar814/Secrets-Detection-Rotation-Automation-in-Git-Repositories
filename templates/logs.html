@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Logs{% endblock %}
+{% block page_title %}Audit Logs{% endblock %}
+{% block page_subtitle %}Structured logs for scans, alerts, and remediation{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+  <div class="col-md-3">
+    <select id="levelFilter" class="form-select bg-dark text-light border-secondary">
+      <option value="">All Levels</option>
+      <option value="INFO">INFO</option>
+      <option value="WARNING">WARNING</option>
+      <option value="ERROR">ERROR</option>
+      <option value="CRITICAL">CRITICAL</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <input type="text" id="logSearch" class="form-control bg-dark text-light border-secondary" placeholder="Search logs...">
+  </div>
+  <div class="col-md-2 ms-auto text-end">
+    <span id="logCount" class="badge bg-secondary fs-6">0</span>
+  </div>
+</div>
+
+<div class="card bg-dark border-secondary">
+  <div class="card-body p-0">
+    <pre id="logOutput" class="mb-0 p-3" style="max-height:600px;overflow-y:auto;font-size:0.82rem;color:#e0e0e0;background:transparent"></pre>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let allLogs = [];
+async function loadLogs() {
+  allLogs = await (await fetch('/api/logs')).json();
+  render(allLogs);
+}
+function render(data) {
+  const colors = {INFO:'#0dcaf0',WARNING:'#fd7e14',ERROR:'#dc3545',CRITICAL:'#ff1744'};
+  document.getElementById('logOutput').innerHTML = data.map(l => {
+    const c = colors[l.level]||'#e0e0e0';
+    return `<span style="color:#888">${l.created_at||''}</span> <span style="color:${c};font-weight:bold">[${l.level}]</span> <span style="color:#aaa">${l.category||''}</span> ${l.message||''}`;
+  }).join('\n');
+  document.getElementById('logCount').textContent = data.length + ' entries';
+}
+function filter() {
+  const lv = document.getElementById('levelFilter').value;
+  const q = document.getElementById('logSearch').value.toLowerCase();
+  render(allLogs.filter(l => (!lv||l.level===lv) && (!q||(l.message||'').toLowerCase().includes(q)||(l.category||'').toLowerCase().includes(q))));
+}
+document.getElementById('levelFilter').addEventListener('change', filter);
+document.getElementById('logSearch').addEventListener('input', filter);
+loadLogs();
+</script>
+{% endblock %}

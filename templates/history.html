@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Commit History{% endblock %}
+{% block page_title %}Commit History Leaks{% endblock %}
+{% block page_subtitle %}Secrets found in past Git commits and diffs{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-4">
+    <input type="text" id="histSearch" class="form-control bg-dark text-light border-secondary" placeholder="Search by file, author, or type...">
+  </div>
+  <div class="col-md-2 text-end ms-auto">
+    <span id="histCount" class="badge bg-secondary fs-6">0 leaks</span>
+  </div>
+</div>
+<div class="card bg-dark border-secondary">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover mb-0" id="histTable">
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Secret Type</th>
+          <th>File</th>
+          <th>Commit</th>
+          <th>Author</th>
+          <th>Preview</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let histData = [];
+async function loadHistory() {
+  histData = await (await fetch('/api/history')).json();
+  render(histData);
+}
+function render(data) {
+  const colors = {Critical:'danger',High:'warning',Medium:'info',Low:'secondary'};
+  document.querySelector('#histTable tbody').innerHTML = data.map(h => `<tr>
+    <td><span class="badge bg-${colors[h.severity]||'secondary'}">${h.severity}</span></td>
+    <td><code>${h.secret_type}</code></td>
+    <td class="text-truncate" style="max-width:200px" title="${h.file_path}">${h.file_path}</td>
+    <td><code class="text-info">${(h.commit_hash||'').slice(0,8)}</code></td>
+    <td>${h.author||'—'}</td>
+    <td><code class="text-warning">${h.masked_preview||'—'}</code></td>
+    <td>${h.commit_date ? new Date(h.commit_date).toLocaleDateString() : '—'}</td>
+  </tr>`).join('');
+  document.getElementById('histCount').textContent = data.length + ' leaks';
+}
+document.getElementById('histSearch').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  render(histData.filter(h => [h.file_path,h.author,h.secret_type].some(v=>(v||'').toLowerCase().includes(q))));
+});
+loadHistory();
+</script>
+{% endblock %}

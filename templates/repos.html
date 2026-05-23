@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Repositories{% endblock %}
+{% block page_title %}Repository Statistics{% endblock %}
+{% block page_subtitle %}Scanned repositories and their findings{% endblock %}
+
+{% block content %}
+<div id="repoCards" class="row g-4"></div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card bg-dark border-secondary">
+      <div class="card-header border-secondary"><i class="bi bi-table me-2"></i>Scan History</div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover mb-0" id="scanTable">
+          <thead>
+            <tr><th>Repository</th><th>Scan Type</th><th>Files Scanned</th><th>Findings</th><th>Duration</th><th>Date</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+async function loadRepos() {
+  const repos = await (await fetch('/api/repos')).json();
+  const stats = await (await fetch('/api/stats')).json();
+
+  document.getElementById('repoCards').innerHTML = repos.map(r => `
+    <div class="col-md-6 col-lg-4">
+      <div class="card bg-dark border-secondary h-100">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-folder2-open me-2 text-info"></i>${r.name}</h5>
+          <p class="text-muted small text-truncate" title="${r.path}">${r.path}</p>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Scans</span><span class="fw-bold">${r.scan_count||0}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Last Scan</span><span>${r.last_scan ? new Date(r.last_scan).toLocaleDateString() : 'Never'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Load scan history
+  const findings = await (await fetch('/api/findings')).json();
+  const scans = {};
+  findings.forEach(f => {
+    const key = (f.found_at||'').slice(0,16);
+    if(!scans[key]) scans[key] = {count:0, files:new Set()};
+    scans[key].count++;
+    scans[key].files.add(f.file_path);
+  });
+  const scanRows = Object.entries(scans).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,20);
+  document.querySelector('#scanTable tbody').innerHTML = scanRows.map(([ts,s]) => `<tr>
+    <td>Scanned Repo</td><td>File Scan</td><td>${s.files.size}</td><td>${s.count}</td><td>—</td>
+    <td>${new Date(ts).toLocaleString()}</td>
+  </tr>`).join('') || '<tr><td colspan="6" class="text-center text-muted">No scans yet</td></tr>';
+}
+loadRepos();
+</script>
+{% endblock %}

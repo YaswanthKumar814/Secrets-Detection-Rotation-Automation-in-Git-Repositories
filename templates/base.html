@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitGuard — {% block title %}Dashboard{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gg-bg: #0b0e14; --gg-surface: #12151e; --gg-surface2: #1a1e2e;
+      --gg-border: #252a3a; --gg-text: #c9d1d9; --gg-text-dim: #6e7681;
+      --gg-accent: #00e5a0; --gg-accent-dim: rgba(0,229,160,0.12);
+      --gg-critical: #ff4c6a; --gg-high: #ff8c42; --gg-medium: #f5c542; --gg-low: #58d68d;
+      --gg-blue: #58a6ff; --gg-purple: #bc8cff;
+    }
+    * { box-sizing: border-box; }
+    body { background: var(--gg-bg); color: var(--gg-text); font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.92rem; }
+    code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+    a { color: var(--gg-accent); text-decoration: none; }
+    a:hover { color: #33ffbb; }
+
+    /* Sidebar */
+    .sidebar { position: fixed; top: 0; left: 0; width: 220px; height: 100vh; background: var(--gg-surface);
+               border-right: 1px solid var(--gg-border); padding: 1.2rem 0; overflow-y: auto; z-index: 100; }
+    .sidebar .logo { padding: 0 1.2rem 1.5rem; display: flex; align-items: center; gap: 0.6rem;
+                     font-size: 1.15rem; font-weight: 700; color: var(--gg-accent); }
+    .sidebar .logo i { font-size: 1.4rem; }
+    .sidebar .nav-item { display: block; padding: 0.55rem 1.2rem; color: var(--gg-text-dim); transition: all 0.15s; font-size: 0.88rem; }
+    .sidebar .nav-item:hover { color: var(--gg-text); background: var(--gg-accent-dim); }
+    .sidebar .nav-item.active { color: var(--gg-accent); background: var(--gg-accent-dim); border-right: 3px solid var(--gg-accent); }
+    .sidebar .nav-item i { width: 22px; display: inline-block; text-align: center; margin-right: 0.5rem; }
+    .sidebar .section-label { padding: 1rem 1.2rem 0.3rem; font-size: 0.7rem; text-transform: uppercase;
+                              letter-spacing: 1px; color: var(--gg-text-dim); }
+
+    /* Main */
+    .main { margin-left: 220px; padding: 1.5rem 2rem 3rem; min-height: 100vh; }
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h1 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .page-header p { color: var(--gg-text-dim); margin: 0.2rem 0 0; font-size: 0.85rem; }
+
+    /* Cards */
+    .gg-card { background: var(--gg-surface); border: 1px solid var(--gg-border); border-radius: 10px; padding: 1.3rem; }
+    .stat-card { text-align: center; }
+    .stat-card .value { font-size: 2rem; font-weight: 700; line-height: 1.1; }
+    .stat-card .label { color: var(--gg-text-dim); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.3rem; }
+
+    /* Tables */
+    .gg-table { width: 100%; border-collapse: collapse; }
+    .gg-table th { background: var(--gg-surface2); color: var(--gg-accent); font-size: 0.78rem; text-transform: uppercase;
+                   letter-spacing: 0.5px; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--gg-border); font-weight: 600; }
+    .gg-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--gg-border); font-size: 0.85rem; vertical-align: middle; }
+    .gg-table tr:hover { background: rgba(0,229,160,0.03); }
+
+    /* Badges */
+    .sev-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+    .sev-critical { background: rgba(255,76,106,0.15); color: var(--gg-critical); }
+    .sev-high { background: rgba(255,140,66,0.15); color: var(--gg-high); }
+    .sev-medium { background: rgba(245,197,66,0.15); color: var(--gg-medium); }
+    .sev-low { background: rgba(88,214,141,0.15); color: var(--gg-low); }
+    .conf-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+    .conf-high { background: rgba(0,229,160,0.15); color: var(--gg-accent); }
+    .conf-medium { background: rgba(245,197,66,0.15); color: var(--gg-medium); }
+    .conf-low { background: rgba(110,118,129,0.2); color: var(--gg-text-dim); }
+    .exp-badge { padding: 2px 8px; border-radius: 8px; font-size: 0.72rem; border: 1px solid var(--gg-border); color: var(--gg-text-dim); }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--gg-text-dim); }
+    .empty-state i { font-size: 2.5rem; opacity: 0.4; display: block; margin-bottom: 0.8rem; }
+
+    .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+    .status-completed { background: rgba(0,229,160,0.15); color: var(--gg-accent); }
+    .status-pending { background: rgba(88,166,255,0.15); color: var(--gg-blue); }
+    .status-failed { background: rgba(255,76,106,0.15); color: var(--gg-critical); }
+    .status-initiated { background: rgba(188,140,255,0.15); color: var(--gg-purple); }
+
+    /* Chart container */
+    .chart-box { background: var(--gg-surface); border: 1px solid var(--gg-border); border-radius: 10px; padding: 1.2rem; }
+    .chart-box h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; color: var(--gg-text); }
+
+    /* Buttons */
+    .btn-gg { background: var(--gg-accent); color: #0b0e14; border: none; padding: 0.4rem 1rem; border-radius: 6px;
+              font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
+    .btn-gg:hover { background: #33ffbb; color: #0b0e14; }
+    .btn-gg-outline { background: transparent; border: 1px solid var(--gg-accent); color: var(--gg-accent);
+                      padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.82rem; cursor: pointer; }
+    .btn-gg-outline:hover { background: var(--gg-accent-dim); }
+    .btn-sm-action { padding: 0.25rem 0.6rem; font-size: 0.75rem; }
+
+    /* Utilities */
+    .glow-text { text-shadow: 0 0 20px rgba(0,229,160,0.3); }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gg-accent); display: inline-block;
+                 animation: pulse 2s infinite; margin-right: 0.4rem; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar .nav-item span, .sidebar .logo span, .sidebar .section-label { display: none; }
+      .main { margin-left: 60px; padding: 1rem; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo"><i class="bi bi-shield-lock-fill"></i><span>GitGuard</span></div>
+    <a href="/" class="nav-item {% if page == 'overview' %}active{% endif %}"><i class="bi bi-grid-1x2"></i><span>Overview</span></a>
+    <a href="/findings" class="nav-item {% if page == 'findings' %}active{% endif %}"><i class="bi bi-bug"></i><span>Findings</span></a>
+    <a href="/analytics" class="nav-item {% if page == 'analytics' %}active{% endif %}"><i class="bi bi-graph-up"></i><span>Analytics</span></a>
+    <div class="section-label">Investigation</div>
+    <a href="/history" class="nav-item {% if page == 'history' %}active{% endif %}"><i class="bi bi-clock-history"></i><span>Commit History</span></a>
+    <a href="/rotations" class="nav-item {% if page == 'rotations' %}active{% endif %}"><i class="bi bi-arrow-repeat"></i><span>Rotations</span></a>
+    <a href="/monitoring" class="nav-item {% if page == 'monitoring' %}active{% endif %}"><i class="bi bi-broadcast"></i><span>Monitoring</span></a>
+    <div class="section-label">Output</div>
+    <a href="/reports_page" class="nav-item {% if page == 'reports' %}active{% endif %}"><i class="bi bi-file-earmark-text"></i><span>Reports</span></a>
+    <a href="/logs" class="nav-item {% if page == 'logs' %}active{% endif %}"><i class="bi bi-journal-text"></i><span>Logs</span></a>
+    <a href="/repos" class="nav-item {% if page == 'repos' %}active{% endif %}"><i class="bi bi-folder2-open"></i><span>Repositories</span></a>
+  </nav>
+
+  <div class="main">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

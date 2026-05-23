@@ -1,0 +1,19 @@
+# Batch scan targets for GitGuard (demo configuration)
+
+allowed_local_paths:
+  - ./test_repo
+
+allowed_repositories:
+  - https://github.com/octocat/Hello-World.git
+
+allowed_github_users:
+  - octocat
+
+scan_targets:
+  local:
+    - ./test_repo
+
+  repositories:
+    - https://github.com/octocat/Hello-World.git
+    - https://github.com/ksk240705/repo_original_1.git
+    - https://github.com/ksk240705/repo_original_2.git

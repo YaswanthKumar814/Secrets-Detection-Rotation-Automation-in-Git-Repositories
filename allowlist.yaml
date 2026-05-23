@@ -1,0 +1,16 @@
+# GitGuard scan allowlist — only listed targets may be ingested and scanned.
+# Edit this file before running scan-remote or scan-targets.
+
+allowed_local_paths:
+  - ./test_repo
+
+allowed_repositories:
+  - https://github.com/octocat/Hello-World.git
+  - https://github.com/ksk240705/repo_original_1.git
+  - https://github.com/ksk240705/repo_original_2.git
+  - https://github.com/ksk240705/repo_original_3.git
+  - https://github.com/ksk240705/repo_original_4.git
+
+allowed_github_users:
+  - octocat
+  - ksk240705

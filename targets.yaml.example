@@ -1,0 +1,17 @@
+# Example batch scan configuration — copy to targets.yaml and customize.
+
+allowed_local_paths:
+  - ./test_repo
+
+allowed_repositories:
+  - https://github.com/octocat/Hello-World.git
+
+allowed_github_users:
+  - octocat
+
+scan_targets:
+  local:
+    - ./test_repo
+
+  repositories:
+    - https://github.com/octocat/Hello-World.git

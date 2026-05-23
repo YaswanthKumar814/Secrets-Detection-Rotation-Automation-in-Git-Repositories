@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Risk Analytics</h1>
+  <p>Severity, confidence, ATT&CK, and secret-type breakdown</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value">{{ stats.total_findings|default(0) }}</div><div class="label">Total Findings</div></div></div>
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-accent)">{{ stats.high_confidence|default(0) }}</div><div class="label">High Confidence</div></div></div>
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-critical)">{{ stats.critical|default(0) }}</div><div class="label">Critical</div></div></div>
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:#74b9ff">{{ stats.cloud_credentials|default(0) }}</div><div class="label">Cloud Credentials</div></div></div>
+</div>
+
+<div id="analyticsEmpty" class="gg-card empty-state" style="display:{% if findings %}none{% else %}block{% endif %};">
+  <i class="bi bi-bar-chart"></i>
+  <h3 style="font-size:1rem;color:var(--gg-text);">No analytics data yet</h3>
+  <p>Run a scan to populate analytics: <code class="mono">python main.py scan ./test_repo</code></p>
+</div>
+
+<div id="analyticsCharts" style="{% if not findings %}display:none{% endif %}">
+  <div class="row g-3 mb-3">
+    <div class="col-md-6 col-lg-3">
+      <div class="chart-box" style="height:280px">
+        <h3><i class="bi bi-pie-chart me-1"></i> Severity</h3>
+        <canvas id="sevChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="chart-box" style="height:280px">
+        <h3><i class="bi bi-shield-check me-1"></i> Confidence</h3>
+        <canvas id="confChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="chart-box" style="height:280px">
+        <h3><i class="bi bi-diagram-3 me-1"></i> ATT&CK Techniques</h3>
+        <canvas id="attackChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="gg-card" style="height:280px;overflow-y:auto;">
+        <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;">Grouped Summary</h3>
+        <div id="groupedSummary" style="font-size:0.85rem;color:var(--gg-text-dim);"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="chart-box" style="height:320px">
+        <h3><i class="bi bi-bar-chart me-1"></i> Top Secret Types</h3>
+        <canvas id="typesChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-box" style="height:320px">
+        <h3><i class="bi bi-graph-up me-1"></i> Findings Over Time</h3>
+        <canvas id="timeChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const STATS = {{ stats | tojson }};
+const FINDINGS = {{ findings | tojson }};
+const SEV_COLORS = { Critical: '#ff4c6a', High: '#ff8c42', Medium: '#f5c542', Low: '#58d68d' };
+const CONF_COLORS = { High: '#00e5a0', Medium: '#f5c542', Low: '#6e7681' };
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { labels: { color: '#c9d1d9', font: { size: 11 } } } }
+};
+
+function hasData(obj) {
+  return Object.values(obj).some(v => v > 0);
+}
+
+function renderGroupedSummary(findings) {
+  const el = document.getElementById('groupedSummary');
+  if (!el) return;
+  const grouped = findings.filter(f => (f.occurrence_count || 1) > 1).length;
+  const totalOcc = findings.reduce((s, f) => s + (f.occurrence_count || 1), 0);
+  const dupes = totalOcc - findings.length;
+  el.innerHTML = `
+    <div class="d-flex justify-content-between mb-2"><span>Grouped rows</span><span class="mono">${grouped}</span></div>
+    <div class="d-flex justify-content-between mb-2"><span>Total occurrences</span><span class="mono">${totalOcc}</span></div>
+    <div class="d-flex justify-content-between"><span>Duplicates collapsed</span><span class="mono">${Math.max(0, dupes)}</span></div>`;
+}
+
+function buildCharts(findings, stats) {
+  if (!findings.length) return;
+
+  const sevCounts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
+  findings.forEach(f => { if (sevCounts[f.severity] !== undefined) sevCounts[f.severity]++; });
+
+  const confCounts = { High: 0, Medium: 0, Low: 0 };
+  findings.forEach(f => {
+    const c = f.confidence_label || 'Medium';
+    if (confCounts[c] !== undefined) confCounts[c]++;
+  });
+  if (stats.by_confidence && stats.by_confidence.length) {
+    stats.by_confidence.forEach(row => {
+      if (row.confidence_label && confCounts[row.confidence_label] !== undefined)
+        confCounts[row.confidence_label] = row.count;
+    });
+  }
+
+  const attackCounts = {};
+  (stats.by_attack || []).forEach(a => {
+    if (a.attack_technique) attackCounts[a.attack_technique] = a.count;
+  });
+  if (!Object.keys(attackCounts).length) {
+    findings.forEach(f => {
+      const t = f.attack_technique || 'T1552';
+      attackCounts[t] = (attackCounts[t] || 0) + 1;
+    });
+  }
+
+  const typeCounts = {};
+  findings.forEach(f => {
+    const t = f.secret_type || 'Unknown';
+    typeCounts[t] = (typeCounts[t] || 0) + 1;
+  });
+  const typeSorted = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  if (hasData(sevCounts)) {
+    new Chart(document.getElementById('sevChart'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(sevCounts),
+        datasets: [{ data: Object.values(sevCounts),
+          backgroundColor: Object.keys(sevCounts).map(k => SEV_COLORS[k] || '#6e7681'), borderWidth: 0 }]
+      },
+      options: { ...chartDefaults, plugins: { legend: { position: 'bottom', labels: { color: '#c9d1d9', padding: 10, font: { size: 10 } } } } }
+    });
+  }
+
+  if (hasData(confCounts)) {
+    new Chart(document.getElementById('confChart'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(confCounts),
+        datasets: [{ data: Object.values(confCounts),
+          backgroundColor: Object.keys(confCounts).map(k => CONF_COLORS[k] || '#6e7681'), borderWidth: 0 }]
+      },
+      options: { ...chartDefaults, plugins: { legend: { position: 'bottom', labels: { color: '#c9d1d9', padding: 10, font: { size: 10 } } } } }
+    });
+  }
+
+  const atkSorted = Object.entries(attackCounts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  if (atkSorted.length) {
+    new Chart(document.getElementById('attackChart'), {
+      type: 'bar',
+      data: {
+        labels: atkSorted.map(s => s[0]),
+        datasets: [{ label: 'Findings', data: atkSorted.map(s => s[1]), backgroundColor: '#bc8cff' }]
+      },
+      options: {
+        ...chartDefaults,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } },
+          y: { ticks: { color: '#c9d1d9', font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  if (typeSorted.length) {
+    new Chart(document.getElementById('typesChart'), {
+      type: 'bar',
+      data: {
+        labels: typeSorted.map(s => s[0]),
+        datasets: [{ label: 'Count', data: typeSorted.map(s => s[1]), backgroundColor: '#58a6ff' }]
+      },
+      options: {
+        ...chartDefaults,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } },
+          y: { ticks: { color: '#c9d1d9', font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  const byDate = {};
+  findings.forEach(f => {
+    const d = (f.found_at || '').slice(0, 10);
+    if (d) byDate[d] = (byDate[d] || 0) + 1;
+  });
+  const dates = Object.keys(byDate).sort();
+  if (dates.length) {
+    new Chart(document.getElementById('timeChart'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Findings', data: dates.map(d => byDate[d]),
+          borderColor: '#00e5a0', backgroundColor: 'rgba(0,229,160,0.12)', fill: true, tension: 0.3
+        }]
+      },
+      options: {
+        ...chartDefaults,
+        scales: {
+          x: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } },
+          y: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } }
+        }
+      }
+    });
+  }
+
+  renderGroupedSummary(findings);
+}
+
+if (FINDINGS.length) {
+  buildCharts(FINDINGS, STATS);
+} else {
+  document.getElementById('analyticsEmpty').style.display = 'block';
+  document.getElementById('analyticsCharts').style.display = 'none';
+}
+</script>
+{% endblock %}

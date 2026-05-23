@@ -1,0 +1,7268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitGuard Security Report</title>
+<style>
+  :root { --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a; --text: #e2e8f0;
+           --accent: #00d4aa; --critical: #ff4757; --high: #ff8c42; --medium: #ffd93d; --low: #6bcf7f; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; padding: 2rem; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { color: var(--accent); font-size: 1.3rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  .meta { color: #888; margin-bottom: 2rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; text-align: center; }
+  .stat-card .value { font-size: 2rem; font-weight: 700; }
+  .stat-card .label { color: #888; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .critical-val { color: var(--critical); }
+  .high-val { color: var(--high); }
+  .medium-val { color: var(--medium); }
+  .low-val { color: var(--low); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface); color: var(--accent); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+  td { font-size: 0.9rem; }
+  .badge { padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+  .badge-critical { background: rgba(255,71,87,0.2); color: var(--critical); }
+  .badge-high { background: rgba(255,140,66,0.2); color: var(--high); }
+  .badge-medium { background: rgba(255,217,61,0.2); color: var(--medium); }
+  .badge-low { background: rgba(107,207,127,0.2); color: var(--low); }
+  .mitre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+  .mitre h3 { color: var(--accent); margin-bottom: 0.5rem; }
+  .mitre-item { margin: 0.5rem 0; padding: 0.5rem; background: rgba(0,212,170,0.05); border-radius: 4px; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: #666; font-size: 0.8rem; text-align: center; }
+  @media print { body { background: #fff; color: #333; } .stat-card { border: 1px solid #ddd; } th { background: #f5f5f5; color: #333; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ GitGuard Security Report</h1>
+  <p class="meta">Generated: 2026-05-23 12:51:00 | Repositories scanned: 10 | Total scans: 31</p>
+
+  <h2>Executive Summary</h2>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="value">562</div><div class="label">Total Findings</div></div>
+    <div class="stat-card"><div class="value critical-val">198</div><div class="label">Critical</div></div>
+    <div class="stat-card"><div class="value high-val">217</div><div class="label">High</div></div>
+    <div class="stat-card"><div class="value medium-val">147</div><div class="label">Medium</div></div>
+    <div class="stat-card"><div class="value low-val">0</div><div class="label">Low</div></div>
+    <div class="stat-card"><div class="value" style="color:var(--accent)">198</div><div class="label">Rotated</div></div>
+    <div class="stat-card"><div class="value" style="color:#a78bfa">68</div><div class="label">History Leaks</div></div>
+  </div>
+
+  <h2>Findings by Secret Type</h2>
+  <table>
+    <tr><th>Secret Type</th><th>Count</th></tr>
+    
+    <tr><td>Generic Secret</td><td>147</td></tr>
+    
+    <tr><td>Generic API Key</td><td>73</td></tr>
+    
+    <tr><td>Database URL</td><td>36</td></tr>
+    
+    <tr><td>Twilio API Key</td><td>18</td></tr>
+    
+    <tr><td>Stripe Secret Key</td><td>18</td></tr>
+    
+    <tr><td>Slack Webhook</td><td>18</td></tr>
+    
+    <tr><td>Slack Bot Token</td><td>18</td></tr>
+    
+    <tr><td>SendGrid Key</td><td>18</td></tr>
+    
+    <tr><td>Private Key Block</td><td>18</td></tr>
+    
+    <tr><td>OpenAI API Key</td><td>18</td></tr>
+    
+    <tr><td>Mailgun Key</td><td>18</td></tr>
+    
+    <tr><td>JWT Token</td><td>18</td></tr>
+    
+    <tr><td>Google API Key</td><td>18</td></tr>
+    
+    <tr><td>GitLab Token</td><td>18</td></tr>
+    
+    <tr><td>GitHub Token (classic)</td><td>18</td></tr>
+    
+    <tr><td>GitHub OAuth</td><td>18</td></tr>
+    
+    <tr><td>Bearer Token</td><td>18</td></tr>
+    
+    <tr><td>Basic Auth</td><td>18</td></tr>
+    
+    <tr><td>AWS Secret Key</td><td>18</td></tr>
+    
+    <tr><td>AWS Access Key</td><td>18</td></tr>
+    
+  </table>
+
+  <h2>Detailed Findings</h2>
+  <table>
+    <tr><th>File</th><th>Line</th><th>Type</th><th>Preview</th><th>Severity</th><th>Entropy</th><th>Status</th></tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>script.js</td>
+      <td>11</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********9"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.932</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>script.js</td>
+      <td>12</td>
+      <td>Generic API Key</td>
+      <td><code>API_********4"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.654</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>script.js</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********n"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.26</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>script.js</td>
+      <td>15</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********t"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.142</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>3</td>
+      <td>Generic Secret</td>
+      <td><code>pass********es</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.819</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>notes.txt</td>
+      <td>4</td>
+      <td>JWT Token</td>
+      <td><code>eyJh********Kt</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.323</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>2</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.572</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>3</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>3.684</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>4</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.723</td>
+      <td>ACTIVE</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********VT</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.942</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>5.079</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>6</td>
+      <td>Generic API Key</td>
+      <td><code>API_********xy</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.268</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>7</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.75</td>
+      <td>EXPIRED</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.834</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>8</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********ZU</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>5.056</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>.env</td>
+      <td>10</td>
+      <td>Generic Secret</td>
+      <td><code>SECR********cm</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.696</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.47</td>
+      <td>TEST</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>2</td>
+      <td>Generic Secret</td>
+      <td><code>TOKE********o"</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>4.793</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>3</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.803</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>scripts\setup.sh</td>
+      <td>4</td>
+      <td>Slack Webhook</td>
+      <td><code>http********7c</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.956</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>keys\service_account.json</td>
+      <td>5</td>
+      <td>Private Key Block</td>
+      <td><code>----********--</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.382</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>5</td>
+      <td>Generic Secret</td>
+      <td><code>pass********24</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.708</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>7</td>
+      <td>Generic API Key</td>
+      <td><code>api_********TT</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>5.207</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>config\database.yml</td>
+      <td>13</td>
+      <td>Generic Secret</td>
+      <td><code>pass********23</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>6</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.037</td>
+      <td>INVALID</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>7</td>
+      <td>Mailgun Key</td>
+      <td><code>key-********01</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.371</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********c0</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.678</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>deploy\docker-compose.yml</td>
+      <td>12</td>
+      <td>Generic Secret</td>
+      <td><code>PASS********rd</code></td>
+      <td><span class="badge badge-medium">Medium</span></td>
+      <td>3.971</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>4</td>
+      <td>Bearer Token</td>
+      <td><code>Bear********Dg</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.884</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>6</td>
+      <td>Twilio API Key</td>
+      <td><code>SKdd********f8</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>3.903</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\auth.py</td>
+      <td>12</td>
+      <td>Basic Auth</td>
+      <td><code>Basi********Zo</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.572</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Google API Key</td>
+      <td><code>AIza********jv</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.548</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>8</td>
+      <td>Generic API Key</td>
+      <td><code>API_********v"</code></td>
+      <td><span class="badge badge-high">High</span></td>
+      <td>4.937</td>
+      <td>UNKNOWN</td>
+    </tr>
+    
+    <tr>
+      <td>src\app.py</td>
+      <td>9</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><span class="badge badge-critical">Critical</span></td>
+      <td>4.97</td>
+      <td>TEST</td>
+    </tr>
+    
+  </table>
+
+  
+  <h2>Commit History Leaks</h2>
+  <table>
+    <tr><th>Commit</th><th>Author</th><th>Date</th><th>File</th><th>Type</th><th>Severity</th></tr>
+    
+    <tr>
+      <td><code>c20ba7a1</code></td>
+      <td>Junior</td>
+      <td>2026-05-23T10:12:48+05:30</td>
+      <td>src/leaked_temp.py</td>
+      <td>Stripe Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Database URL</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>AWS Access Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>AWS Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>GitHub Token (classic)</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>OpenAI API Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Stripe Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Slack Bot Token</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Database URL</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Mailgun Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>keys/service_account.json</td>
+      <td>Private Key Block</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>notes.txt</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>notes.txt</td>
+      <td>JWT Token</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>GitLab Token</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>GitHub OAuth</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>Slack Webhook</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>Google API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>SendGrid Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Bearer Token</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Twilio API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Basic Auth</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>65632d30</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:43+05:30</td>
+      <td>.env.old</td>
+      <td>AWS Access Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>65632d30</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:43+05:30</td>
+      <td>.env.old</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Basic Auth</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>65632d30</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:43+05:30</td>
+      <td>.env.old</td>
+      <td>AWS Access Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>65632d30</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:43+05:30</td>
+      <td>.env.old</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>AWS Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>GitHub Token (classic)</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>OpenAI API Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Stripe Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Slack Bot Token</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>config/database.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Database URL</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Mailgun Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>deploy/docker-compose.yml</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>keys/service_account.json</td>
+      <td>Private Key Block</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>notes.txt</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>notes.txt</td>
+      <td>JWT Token</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>GitLab Token</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>Generic Secret</td>
+      <td><span class="badge badge-medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>GitHub OAuth</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>scripts/setup.sh</td>
+      <td>Slack Webhook</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>Google API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>Generic API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/app.py</td>
+      <td>SendGrid Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Bearer Token</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>src/auth.py</td>
+      <td>Twilio API Key</td>
+      <td><span class="badge badge-high">High</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>c20ba7a1</code></td>
+      <td>Junior</td>
+      <td>2026-05-23T10:12:48+05:30</td>
+      <td>src/leaked_temp.py</td>
+      <td>Stripe Secret Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>Database URL</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td><code>3f777ad9</code></td>
+      <td>Dev</td>
+      <td>2026-05-23T10:12:47+05:30</td>
+      <td>.env</td>
+      <td>AWS Access Key</td>
+      <td><span class="badge badge-critical">Critical</span></td>
+    </tr>
+    
+  </table>
+  
+
+  
+  <h2>Rotation / Remediation History</h2>
+  <table>
+    <tr><th>Finding</th><th>Type</th><th>Old</th><th>New</th><th>Status</th><th>Retries</th></tr>
+    
+    <tr>
+      <td>#549</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********My</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#550</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********Y7</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#551</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********BO</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#552</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********KV</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#554</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********N0</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#556</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********k9</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#557</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********CB</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#533</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********hO</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#535</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********E3</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#539</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********50</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#545</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********gy</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#510</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********YX</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#511</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********zQ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#513</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********xu</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#515</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********Zj</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#516</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********gO</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#521</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********HA</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#523</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********Au</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#528</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********RY</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#504</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********QU</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#508</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********lb</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#509</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********LJ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#494</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********E2</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#496</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********7P</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#500</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********CY</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#474</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********65</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#481</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********UL</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#482</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********DO</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#483</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********43</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#484</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********Dz</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#486</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********Rv</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#488</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********bf</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#489</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********EU</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#461</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********2G</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#466</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********ah</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#439</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********gU</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#443</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********Km</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#444</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********JQ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#445</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********AY</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#446</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********QY</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#448</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********Sp</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#450</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********rQ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#451</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********sP</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#459</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********h7</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#428</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********Kn</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#432</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********YC</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#415</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********YV</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#416</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********1M</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#417</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********4Y</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#418</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********uX</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#420</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********HK</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#422</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********UK</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#423</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********4f</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#426</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********0B</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#410</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********bg</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#401</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********Ib</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#402</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********MV</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#381</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********5W</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#383</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********lU</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#391</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********zT</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#394</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********gv</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#395</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********5X</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#396</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********UA</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#397</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********kI</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#399</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********kV</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#377</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********AV</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#356</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********Q2</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#358</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********Wn</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#360</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********b5</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#361</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********sD</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#372</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********Fp</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#373</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********gQ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#375</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********QK</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#346</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********ZN</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#353</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********qk</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#354</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********22</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#355</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********8I</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#323</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********di</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#329</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********lD</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#338</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********dW</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#342</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********hc</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#344</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********vz</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#315</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********3c</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#316</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********O5</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#317</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********GC</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#318</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********bN</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#320</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********SW</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#322</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********Up</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#314</td>
+      <td>SendGrid Key</td>
+      <td><code>SG.Q********3c</code></td>
+      <td><code>rota********l4</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#284</td>
+      <td>Database URL</td>
+      <td><code>post********pp</code></td>
+      <td><code>rota********lm</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#285</td>
+      <td>AWS Access Key</td>
+      <td><code>AKIA********LE</code></td>
+      <td><code>AKIA********9D</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#286</td>
+      <td>AWS Secret Key</td>
+      <td><code>AWS_********EY</code></td>
+      <td><code>AKIA********2F</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#287</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********Yy</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#289</td>
+      <td>OpenAI API Key</td>
+      <td><code>sk-N********xy</code></td>
+      <td><code>rota********IC</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#291</td>
+      <td>Stripe Secret Key</td>
+      <td><code>sk_l********sV</code></td>
+      <td><code>sk_l********cE</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#292</td>
+      <td>Slack Bot Token</td>
+      <td><code>xoxb********ZU</code></td>
+      <td><code>xoxb********e5</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#297</td>
+      <td>Database URL</td>
+      <td><code>mysq********pp</code></td>
+      <td><code>rota********YJ</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#308</td>
+      <td>GitLab Token</td>
+      <td><code>glpa********xo</code></td>
+      <td><code>rota********tG</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+    <tr>
+      <td>#310</td>
+      <td>GitHub OAuth</td>
+      <td><code>gho_********dl</code></td>
+      <td><code>ghp_********au</code></td>
+      <td>completed</td>
+      <td>1</td>
+    </tr>
+    
+    <tr>
+      <td>#256</td>
+      <td>GitHub Token (classic)</td>
+      <td><code>ghp_********VT</code></td>
+      <td><code>ghp_********If</code></td>
+      <td>completed</td>
+      <td>0</td>
+    </tr>
+    
+  </table>
+  
+
+  <h2>MITRE ATT&CK Defensive Mapping</h2>
+  <div class="mitre">
+    <div class="mitre-item"><h3>T1552 — Unsecured Credentials</h3>GitGuard detects hardcoded credentials in source code and configuration files, preventing adversaries from harvesting secrets from repositories.</div>
+    <div class="mitre-item"><h3>T1552.001 — Credentials in Files</h3>Regex + entropy scanning identifies API keys, tokens, and passwords stored in plaintext files.</div>
+    <div class="mitre-item"><h3>T1078 — Valid Accounts</h3>Mock credential validation and rotation prevents attackers from using leaked valid credentials for initial access.</div>
+    <div class="mitre-item"><h3>T1556 — Modify Authentication Process</h3>Automated rotation workflow ensures compromised credentials are replaced before exploitation.</div>
+    <div class="mitre-item"><h3>D3-SPM — Secret Pattern Monitoring</h3>Continuous watchdog-based monitoring detects new secrets as they are committed in real time.</div>
+  </div>
+
+  <div class="footer">GitGuard — Defensive Secrets Detection &amp; Rotation System | Report generated automatically</div>
+</div>
+</body>
+</html>

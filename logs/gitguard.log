@@ -1,0 +1,739 @@
+2026-05-23 10:12:49,038 | INFO | [test_repo] Test repo created at test_repo with 10 files and git history
+2026-05-23 10:12:50,906 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 10:12:51,931 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 10:12:51,995 | INFO | [rotation] Initiating mock rotation for finding #3 (Database URL)
+2026-05-23 10:12:52,056 | INFO | [rotation] Rotation completed for finding #3 (retries: 0)
+2026-05-23 10:12:52,076 | INFO | [rotation] Initiating mock rotation for finding #4 (AWS Access Key)
+2026-05-23 10:12:52,130 | INFO | [rotation] Rotation completed for finding #4 (retries: 0)
+2026-05-23 10:12:52,160 | INFO | [rotation] Initiating mock rotation for finding #5 (AWS Secret Key)
+2026-05-23 10:12:52,225 | INFO | [rotation] Rotation completed for finding #5 (retries: 0)
+2026-05-23 10:12:52,242 | INFO | [rotation] Initiating mock rotation for finding #6 (GitHub Token (classic))
+2026-05-23 10:12:52,300 | INFO | [rotation] Rotation completed for finding #6 (retries: 0)
+2026-05-23 10:12:52,343 | INFO | [rotation] Initiating mock rotation for finding #8 (OpenAI API Key)
+2026-05-23 10:12:52,530 | INFO | [rotation] Rotation completed for finding #8 (retries: 1)
+2026-05-23 10:12:52,544 | INFO | [rotation] Initiating mock rotation for finding #10 (Stripe Secret Key)
+2026-05-23 10:12:52,795 | INFO | [rotation] Rotation completed for finding #10 (retries: 1)
+2026-05-23 10:12:52,814 | INFO | [rotation] Initiating mock rotation for finding #11 (Slack Bot Token)
+2026-05-23 10:12:52,880 | INFO | [rotation] Rotation completed for finding #11 (retries: 0)
+2026-05-23 10:12:52,899 | INFO | [rotation] Initiating mock rotation for finding #14 (GitLab Token)
+2026-05-23 10:12:53,433 | INFO | [rotation] Rotation completed for finding #14 (retries: 1)
+2026-05-23 10:12:53,462 | INFO | [rotation] Initiating mock rotation for finding #16 (GitHub OAuth)
+2026-05-23 10:12:53,564 | INFO | [rotation] Rotation completed for finding #16 (retries: 0)
+2026-05-23 10:12:53,577 | INFO | [rotation] Initiating mock rotation for finding #22 (Database URL)
+2026-05-23 10:12:53,671 | INFO | [rotation] Rotation completed for finding #22 (retries: 0)
+2026-05-23 10:12:53,723 | INFO | [rotation] Initiating mock rotation for finding #31 (SendGrid Key)
+2026-05-23 10:12:53,840 | INFO | [rotation] Rotation completed for finding #31 (retries: 0)
+2026-05-23 10:12:55,252 | INFO | [history] Scanning commit history for C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 10:12:58,277 | INFO | [history] History scan complete: 4 commits, 34 leaks found
+2026-05-23 11:28:44,766 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:28:45,673 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:28:45,768 | INFO | [rotation] Initiating mock rotation for finding #42 (Slack Bot Token)
+2026-05-23 11:28:45,951 | INFO | [rotation] Rotation completed for finding #42 (retries: 0)
+2026-05-23 11:28:45,981 | INFO | [rotation] Initiating mock rotation for finding #48 (Database URL)
+2026-05-23 11:28:46,129 | INFO | [rotation] Rotation completed for finding #48 (retries: 0)
+2026-05-23 11:28:46,143 | INFO | [rotation] Initiating mock rotation for finding #53 (GitLab Token)
+2026-05-23 11:28:46,270 | INFO | [rotation] Rotation completed for finding #53 (retries: 0)
+2026-05-23 11:28:46,288 | INFO | [rotation] Initiating mock rotation for finding #55 (GitHub OAuth)
+2026-05-23 11:28:46,416 | INFO | [rotation] Rotation completed for finding #55 (retries: 0)
+2026-05-23 11:28:46,423 | INFO | [rotation] Initiating mock rotation for finding #59 (SendGrid Key)
+2026-05-23 11:28:46,486 | INFO | [rotation] Rotation completed for finding #59 (retries: 0)
+2026-05-23 11:28:46,502 | INFO | [rotation] Initiating mock rotation for finding #34 (Database URL)
+2026-05-23 11:28:46,619 | INFO | [rotation] Rotation completed for finding #34 (retries: 0)
+2026-05-23 11:28:46,637 | INFO | [rotation] Initiating mock rotation for finding #35 (AWS Access Key)
+2026-05-23 11:28:46,747 | INFO | [rotation] Rotation completed for finding #35 (retries: 0)
+2026-05-23 11:28:46,765 | INFO | [rotation] Initiating mock rotation for finding #36 (AWS Secret Key)
+2026-05-23 11:28:46,823 | INFO | [rotation] Rotation completed for finding #36 (retries: 0)
+2026-05-23 11:28:46,837 | INFO | [rotation] Initiating mock rotation for finding #37 (GitHub Token (classic))
+2026-05-23 11:28:46,909 | INFO | [rotation] Rotation completed for finding #37 (retries: 0)
+2026-05-23 11:28:46,933 | INFO | [rotation] Initiating mock rotation for finding #39 (OpenAI API Key)
+2026-05-23 11:28:47,013 | INFO | [rotation] Rotation completed for finding #39 (retries: 0)
+2026-05-23 11:28:47,032 | INFO | [rotation] Initiating mock rotation for finding #41 (Stripe Secret Key)
+2026-05-23 11:28:47,074 | INFO | [rotation] Rotation completed for finding #41 (retries: 0)
+2026-05-23 11:39:29,013 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:39:29,560 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:39:29,610 | INFO | [rotation] Initiating mock rotation for finding #65 (Database URL)
+2026-05-23 11:39:29,801 | INFO | [rotation] Rotation completed for finding #65 (retries: 1)
+2026-05-23 11:39:29,827 | INFO | [rotation] Initiating mock rotation for finding #66 (AWS Access Key)
+2026-05-23 11:39:30,012 | INFO | [rotation] Rotation completed for finding #66 (retries: 1)
+2026-05-23 11:39:30,044 | INFO | [rotation] Initiating mock rotation for finding #67 (AWS Secret Key)
+2026-05-23 11:39:30,110 | INFO | [rotation] Rotation completed for finding #67 (retries: 0)
+2026-05-23 11:39:30,127 | INFO | [rotation] Initiating mock rotation for finding #68 (GitHub Token (classic))
+2026-05-23 11:39:30,314 | INFO | [rotation] Rotation completed for finding #68 (retries: 1)
+2026-05-23 11:39:30,344 | INFO | [rotation] Initiating mock rotation for finding #70 (OpenAI API Key)
+2026-05-23 11:39:30,527 | INFO | [rotation] Rotation completed for finding #70 (retries: 1)
+2026-05-23 11:39:30,560 | INFO | [rotation] Initiating mock rotation for finding #72 (Stripe Secret Key)
+2026-05-23 11:39:30,628 | INFO | [rotation] Rotation completed for finding #72 (retries: 0)
+2026-05-23 11:39:30,659 | INFO | [rotation] Initiating mock rotation for finding #73 (Slack Bot Token)
+2026-05-23 11:39:30,727 | INFO | [rotation] Rotation completed for finding #73 (retries: 0)
+2026-05-23 11:39:30,757 | INFO | [rotation] Initiating mock rotation for finding #76 (Database URL)
+2026-05-23 11:39:30,820 | INFO | [rotation] Rotation completed for finding #76 (retries: 0)
+2026-05-23 11:39:30,847 | INFO | [rotation] Initiating mock rotation for finding #85 (SendGrid Key)
+2026-05-23 11:39:30,895 | INFO | [rotation] Rotation completed for finding #85 (retries: 0)
+2026-05-23 11:39:30,926 | INFO | [rotation] Initiating mock rotation for finding #89 (GitLab Token)
+2026-05-23 11:39:30,994 | INFO | [rotation] Rotation completed for finding #89 (retries: 0)
+2026-05-23 11:39:31,014 | INFO | [rotation] Initiating mock rotation for finding #91 (GitHub OAuth)
+2026-05-23 11:39:31,077 | INFO | [rotation] Rotation completed for finding #91 (retries: 0)
+2026-05-23 11:39:32,377 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_h5bcrlbx
+2026-05-23 11:39:34,027 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_h5bcrlbx
+2026-05-23 11:39:34,062 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:39:34,077 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_h5bcrlbx
+2026-05-23 11:39:34,097 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=partial
+2026-05-23 11:40:00,886 | ERROR | [ingestion] Ingestion remote: https://github.com/torvalds/linux.git | allowlist=fail | clone=not_required | cleanup=pending
+2026-05-23 11:40:02,525 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:40:02,993 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:40:03,009 | INFO | [ingestion] Ingestion local: ./test_repo | allowlist=pass | clone=not_required | cleanup=not_required
+2026-05-23 11:40:03,042 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_5mtfuvte
+2026-05-23 11:40:03,816 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_1khsnw1k
+2026-05-23 11:40:05,027 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_5mtfuvte
+2026-05-23 11:40:05,058 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:40:05,094 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_5mtfuvte
+2026-05-23 11:40:05,115 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=partial
+2026-05-23 11:40:05,475 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_1khsnw1k
+2026-05-23 11:40:05,499 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:40:05,778 | INFO | [history] Scanning commit history for C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_1khsnw1k
+2026-05-23 11:40:06,008 | INFO | [history] History scan complete: 1 commits, 0 leaks found
+2026-05-23 11:40:06,041 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_1khsnw1k
+2026-05-23 11:40:06,058 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=partial
+2026-05-23 11:40:26,477 | INFO | [history] Scanning commit history for C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:40:27,493 | INFO | [history] History scan complete: 4 commits, 34 leaks found
+2026-05-23 11:41:08,839 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_t9oh4fw0
+2026-05-23 11:41:10,272 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_t9oh4fw0
+2026-05-23 11:41:10,307 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:41:10,936 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_t9oh4fw0 (partial)
+2026-05-23 11:41:10,965 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=partial
+2026-05-23 11:41:47,901 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_um7dqij9
+2026-05-23 11:41:49,103 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_um7dqij9
+2026-05-23 11:41:49,136 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:41:49,169 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_um7dqij9 (success)
+2026-05-23 11:41:49,186 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=success
+2026-05-23 11:42:51,352 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:42:51,885 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:42:51,901 | INFO | [ingestion] Ingestion local: ./test_repo | allowlist=pass | clone=not_required | cleanup=not_required
+2026-05-23 11:42:51,934 | WARNING | [ingestion] Ingestion remote: https://github.com/torvalds/linux.git | allowlist=fail | clone=skipped | cleanup=not_required
+2026-05-23 11:47:53,850 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:47:54,376 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:47:54,436 | INFO | [rotation] Initiating mock rotation for finding #164 (Slack Bot Token)
+2026-05-23 11:47:54,498 | INFO | [rotation] Rotation completed for finding #164 (retries: 0)
+2026-05-23 11:47:54,522 | INFO | [rotation] Initiating mock rotation for finding #172 (Database URL)
+2026-05-23 11:47:54,569 | INFO | [rotation] Rotation completed for finding #172 (retries: 0)
+2026-05-23 11:47:54,600 | INFO | [rotation] Initiating mock rotation for finding #177 (GitLab Token)
+2026-05-23 11:47:54,653 | INFO | [rotation] Rotation completed for finding #177 (retries: 0)
+2026-05-23 11:47:54,685 | INFO | [rotation] Initiating mock rotation for finding #179 (GitHub OAuth)
+2026-05-23 11:47:54,750 | INFO | [rotation] Rotation completed for finding #179 (retries: 0)
+2026-05-23 11:47:54,781 | INFO | [rotation] Initiating mock rotation for finding #186 (SendGrid Key)
+2026-05-23 11:47:54,836 | INFO | [rotation] Rotation completed for finding #186 (retries: 0)
+2026-05-23 11:47:54,855 | INFO | [rotation] Initiating mock rotation for finding #156 (Database URL)
+2026-05-23 11:47:54,893 | INFO | [rotation] Rotation completed for finding #156 (retries: 0)
+2026-05-23 11:47:54,922 | INFO | [rotation] Initiating mock rotation for finding #157 (AWS Access Key)
+2026-05-23 11:47:55,105 | INFO | [rotation] Rotation completed for finding #157 (retries: 1)
+2026-05-23 11:47:55,137 | INFO | [rotation] Initiating mock rotation for finding #158 (AWS Secret Key)
+2026-05-23 11:47:55,202 | INFO | [rotation] Rotation completed for finding #158 (retries: 0)
+2026-05-23 11:47:55,237 | INFO | [rotation] Initiating mock rotation for finding #159 (GitHub Token (classic))
+2026-05-23 11:47:55,406 | INFO | [rotation] Rotation completed for finding #159 (retries: 1)
+2026-05-23 11:47:55,437 | INFO | [rotation] Initiating mock rotation for finding #161 (OpenAI API Key)
+2026-05-23 11:47:55,487 | INFO | [rotation] Rotation completed for finding #161 (retries: 0)
+2026-05-23 11:47:55,521 | INFO | [rotation] Initiating mock rotation for finding #163 (Stripe Secret Key)
+2026-05-23 11:47:55,587 | INFO | [rotation] Rotation completed for finding #163 (retries: 0)
+2026-05-23 11:47:55,619 | INFO | [rotation] Initiating mock rotation for finding #125 (Database URL)
+2026-05-23 11:47:55,687 | INFO | [rotation] Rotation completed for finding #125 (retries: 0)
+2026-05-23 11:47:55,718 | INFO | [rotation] Initiating mock rotation for finding #126 (AWS Access Key)
+2026-05-23 11:47:55,786 | INFO | [rotation] Rotation completed for finding #126 (retries: 0)
+2026-05-23 11:47:55,817 | INFO | [rotation] Initiating mock rotation for finding #127 (AWS Secret Key)
+2026-05-23 11:47:55,887 | INFO | [rotation] Rotation completed for finding #127 (retries: 0)
+2026-05-23 11:47:55,904 | INFO | [rotation] Initiating mock rotation for finding #128 (GitHub Token (classic))
+2026-05-23 11:47:55,969 | INFO | [rotation] Rotation completed for finding #128 (retries: 0)
+2026-05-23 11:47:56,003 | INFO | [rotation] Initiating mock rotation for finding #130 (OpenAI API Key)
+2026-05-23 11:47:56,186 | INFO | [rotation] Rotation completed for finding #130 (retries: 1)
+2026-05-23 11:47:56,221 | INFO | [rotation] Initiating mock rotation for finding #132 (Stripe Secret Key)
+2026-05-23 11:47:56,270 | INFO | [rotation] Rotation completed for finding #132 (retries: 0)
+2026-05-23 11:47:56,304 | INFO | [rotation] Initiating mock rotation for finding #133 (Slack Bot Token)
+2026-05-23 11:47:56,367 | INFO | [rotation] Rotation completed for finding #133 (retries: 0)
+2026-05-23 11:47:56,386 | INFO | [rotation] Initiating mock rotation for finding #138 (Database URL)
+2026-05-23 11:47:56,438 | INFO | [rotation] Rotation completed for finding #138 (retries: 0)
+2026-05-23 11:47:56,470 | INFO | [rotation] Initiating mock rotation for finding #146 (GitLab Token)
+2026-05-23 11:47:56,535 | INFO | [rotation] Rotation completed for finding #146 (retries: 0)
+2026-05-23 11:47:56,568 | INFO | [rotation] Initiating mock rotation for finding #148 (GitHub OAuth)
+2026-05-23 11:47:56,619 | INFO | [rotation] Rotation completed for finding #148 (retries: 0)
+2026-05-23 11:47:56,666 | INFO | [rotation] Initiating mock rotation for finding #155 (SendGrid Key)
+2026-05-23 11:47:56,735 | INFO | [rotation] Rotation completed for finding #155 (retries: 0)
+2026-05-23 11:47:56,769 | INFO | [rotation] Initiating mock rotation for finding #96 (Database URL)
+2026-05-23 11:47:56,953 | INFO | [rotation] Rotation completed for finding #96 (retries: 1)
+2026-05-23 11:47:56,986 | INFO | [rotation] Initiating mock rotation for finding #97 (AWS Access Key)
+2026-05-23 11:47:57,160 | INFO | [rotation] Rotation completed for finding #97 (retries: 1)
+2026-05-23 11:47:57,207 | INFO | [rotation] Initiating mock rotation for finding #98 (AWS Secret Key)
+2026-05-23 11:47:57,270 | INFO | [rotation] Rotation completed for finding #98 (retries: 0)
+2026-05-23 11:47:57,303 | INFO | [rotation] Initiating mock rotation for finding #99 (GitHub Token (classic))
+2026-05-23 11:47:57,339 | INFO | [rotation] Rotation completed for finding #99 (retries: 0)
+2026-05-23 11:47:57,352 | INFO | [rotation] Initiating mock rotation for finding #101 (OpenAI API Key)
+2026-05-23 11:47:57,385 | INFO | [rotation] Rotation completed for finding #101 (retries: 0)
+2026-05-23 11:47:57,395 | INFO | [rotation] Initiating mock rotation for finding #103 (Stripe Secret Key)
+2026-05-23 11:47:57,421 | INFO | [rotation] Rotation completed for finding #103 (retries: 0)
+2026-05-23 11:47:57,435 | INFO | [rotation] Initiating mock rotation for finding #104 (Slack Bot Token)
+2026-05-23 11:47:57,461 | INFO | [rotation] Rotation completed for finding #104 (retries: 0)
+2026-05-23 11:47:57,461 | INFO | [rotation] Initiating mock rotation for finding #110 (Database URL)
+2026-05-23 11:47:57,620 | INFO | [rotation] Rotation completed for finding #110 (retries: 1)
+2026-05-23 11:47:57,653 | INFO | [rotation] Initiating mock rotation for finding #117 (SendGrid Key)
+2026-05-23 11:47:57,720 | INFO | [rotation] Rotation completed for finding #117 (retries: 0)
+2026-05-23 11:47:57,750 | INFO | [rotation] Initiating mock rotation for finding #118 (GitLab Token)
+2026-05-23 11:47:57,810 | INFO | [rotation] Rotation completed for finding #118 (retries: 0)
+2026-05-23 11:47:57,836 | INFO | [rotation] Initiating mock rotation for finding #120 (GitHub OAuth)
+2026-05-23 11:47:57,892 | INFO | [rotation] Rotation completed for finding #120 (retries: 0)
+2026-05-23 11:47:58,308 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_07mh3i4_
+2026-05-23 11:47:59,833 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_07mh3i4_
+2026-05-23 11:47:59,864 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:47:59,891 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_07mh3i4_ (success)
+2026-05-23 11:47:59,902 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=success
+2026-05-23 11:48:00,329 | ERROR | [ingestion] Ingestion remote: https://github.com/torvalds/linux.git | allowlist=fail | clone=not_required | cleanup=pending
+2026-05-23 11:48:00,736 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 11:48:01,191 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 11:48:01,217 | INFO | [ingestion] Ingestion local: ./test_repo | allowlist=pass | clone=not_required | cleanup=not_required
+2026-05-23 11:48:01,248 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_69toy2el
+2026-05-23 11:48:02,444 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_69toy2el
+2026-05-23 11:48:02,493 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:48:02,519 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_69toy2el (success)
+2026-05-23 11:48:02,537 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=success
+2026-05-23 11:48:02,923 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_0vuziscq
+2026-05-23 11:48:04,216 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_0vuziscq
+2026-05-23 11:48:04,246 | INFO | [scanner] Scan complete: 0 files, 0 secrets found
+2026-05-23 11:48:04,413 | INFO | [history] Scanning commit history for C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_0vuziscq
+2026-05-23 11:48:04,584 | INFO | [history] History scan complete: 1 commits, 0 leaks found
+2026-05-23 11:48:05,526 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_0vuziscq (partial)
+2026-05-23 11:48:05,552 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=partial
+2026-05-23 11:53:44,355 | INFO | [ingestion] Cloning https://github.com/ksk240705/repo_original_1.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_ypft68a3
+2026-05-23 11:54:47,922 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_ypft68a3
+2026-05-23 11:54:48,364 | INFO | [scanner] Scan complete: 3 files, 4 secrets found
+2026-05-23 11:54:48,422 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_ypft68a3 (success)
+2026-05-23 11:54:48,442 | INFO | [ingestion] Ingestion remote: https://github.com/ksk240705/repo_original_1 | allowlist=pass | clone=success | cleanup=success
+2026-05-23 12:01:21,126 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:01:21,561 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:01:22,111 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:01:22,181 | INFO | [rotation] Initiating mock rotation for finding #248 (GitHub OAuth)
+2026-05-23 12:01:22,242 | INFO | [rotation] Rotation completed for finding #248 (retries: 0)
+2026-05-23 12:01:22,276 | INFO | [rotation] Initiating mock rotation for finding #225 (Database URL)
+2026-05-23 12:01:22,326 | INFO | [rotation] Rotation completed for finding #225 (retries: 0)
+2026-05-23 12:01:22,362 | INFO | [rotation] Initiating mock rotation for finding #229 (Database URL)
+2026-05-23 12:01:22,428 | INFO | [rotation] Rotation completed for finding #229 (retries: 0)
+2026-05-23 12:01:22,459 | INFO | [rotation] Initiating mock rotation for finding #230 (AWS Access Key)
+2026-05-23 12:01:22,525 | INFO | [rotation] Rotation completed for finding #230 (retries: 0)
+2026-05-23 12:01:22,547 | INFO | [rotation] Initiating mock rotation for finding #231 (AWS Secret Key)
+2026-05-23 12:01:22,592 | INFO | [rotation] Rotation completed for finding #231 (retries: 0)
+2026-05-23 12:01:22,609 | INFO | [rotation] Initiating mock rotation for finding #232 (GitHub Token (classic))
+2026-05-23 12:01:22,775 | INFO | [rotation] Rotation completed for finding #232 (retries: 1)
+2026-05-23 12:01:22,809 | INFO | [rotation] Initiating mock rotation for finding #234 (OpenAI API Key)
+2026-05-23 12:01:22,880 | INFO | [rotation] Rotation completed for finding #234 (retries: 0)
+2026-05-23 12:01:22,909 | INFO | [rotation] Initiating mock rotation for finding #236 (Stripe Secret Key)
+2026-05-23 12:01:22,959 | INFO | [rotation] Rotation completed for finding #236 (retries: 0)
+2026-05-23 12:01:22,992 | INFO | [rotation] Initiating mock rotation for finding #237 (Slack Bot Token)
+2026-05-23 12:01:23,176 | INFO | [rotation] Rotation completed for finding #237 (retries: 1)
+2026-05-23 12:01:23,209 | INFO | [rotation] Initiating mock rotation for finding #245 (SendGrid Key)
+2026-05-23 12:01:23,276 | INFO | [rotation] Rotation completed for finding #245 (retries: 0)
+2026-05-23 12:01:23,309 | INFO | [rotation] Initiating mock rotation for finding #246 (GitLab Token)
+2026-05-23 12:01:23,478 | INFO | [rotation] Rotation completed for finding #246 (retries: 1)
+2026-05-23 12:01:23,509 | INFO | [rotation] Initiating mock rotation for finding #207 (Database URL)
+2026-05-23 12:01:23,563 | INFO | [rotation] Rotation completed for finding #207 (retries: 0)
+2026-05-23 12:01:23,592 | INFO | [rotation] Initiating mock rotation for finding #214 (SendGrid Key)
+2026-05-23 12:01:23,659 | INFO | [rotation] Rotation completed for finding #214 (retries: 0)
+2026-05-23 12:01:23,694 | INFO | [rotation] Initiating mock rotation for finding #187 (Database URL)
+2026-05-23 12:01:23,879 | INFO | [rotation] Rotation completed for finding #187 (retries: 1)
+2026-05-23 12:01:23,909 | INFO | [rotation] Initiating mock rotation for finding #188 (AWS Access Key)
+2026-05-23 12:01:23,978 | INFO | [rotation] Rotation completed for finding #188 (retries: 0)
+2026-05-23 12:01:24,009 | INFO | [rotation] Initiating mock rotation for finding #189 (AWS Secret Key)
+2026-05-23 12:01:24,075 | INFO | [rotation] Rotation completed for finding #189 (retries: 0)
+2026-05-23 12:01:24,109 | INFO | [rotation] Initiating mock rotation for finding #190 (GitHub Token (classic))
+2026-05-23 12:01:24,178 | INFO | [rotation] Rotation completed for finding #190 (retries: 0)
+2026-05-23 12:01:24,208 | INFO | [rotation] Initiating mock rotation for finding #192 (OpenAI API Key)
+2026-05-23 12:01:24,276 | INFO | [rotation] Rotation completed for finding #192 (retries: 0)
+2026-05-23 12:01:24,309 | INFO | [rotation] Initiating mock rotation for finding #194 (Stripe Secret Key)
+2026-05-23 12:01:24,376 | INFO | [rotation] Rotation completed for finding #194 (retries: 0)
+2026-05-23 12:01:24,409 | INFO | [rotation] Initiating mock rotation for finding #195 (Slack Bot Token)
+2026-05-23 12:01:24,466 | INFO | [rotation] Rotation completed for finding #195 (retries: 0)
+2026-05-23 12:01:24,496 | INFO | [rotation] Initiating mock rotation for finding #203 (GitLab Token)
+2026-05-23 12:01:24,566 | INFO | [rotation] Rotation completed for finding #203 (retries: 0)
+2026-05-23 12:01:24,583 | INFO | [rotation] Initiating mock rotation for finding #205 (GitHub OAuth)
+2026-05-23 12:01:24,609 | INFO | [rotation] Rotation completed for finding #205 (retries: 0)
+2026-05-23 12:01:24,775 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:01:24,775 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:01:25,759 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:01:43,458 | INFO | AWS client initialized (AWS, region=ap-south-1, endpoint=default)
+2026-05-23 12:01:43,458 | WARNING | S3 upload skipped — file not found: nonexistent.html
+2026-05-23 12:01:46,245 | WARNING | SNS publish failed: An error occurred (InvalidClientTokenId) when calling the Publish operation: No account found for the given parameters
+2026-05-23 12:01:51,092 | WARNING | DynamoDB sync failed for 5c249cfe-3773-524b-8e25-54f525708af2: An error occurred (ResourceNotFoundException) when calling the PutItem operation: Requested resource not found
+2026-05-23 12:02:12,124 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_120212.html
+2026-05-23 12:02:12,289 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:02:12,289 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:02:28,889 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:02:55,785 | INFO | AWS connectivity check: {'ok': False, 'detail': 'Could not connect to the endpoint URL: "http://localhost:4566/"', 'mode': 'localstack'}
+2026-05-23 12:05:37,129 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:05:37,686 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:05:37,743 | INFO | [rotation] Initiating mock rotation for finding #253 (Database URL)
+2026-05-23 12:05:37,813 | INFO | [rotation] Rotation completed for finding #253 (retries: 0)
+2026-05-23 12:05:37,842 | INFO | [rotation] Initiating mock rotation for finding #254 (AWS Access Key)
+2026-05-23 12:05:37,913 | INFO | [rotation] Rotation completed for finding #254 (retries: 0)
+2026-05-23 12:05:37,928 | INFO | [rotation] Initiating mock rotation for finding #255 (AWS Secret Key)
+2026-05-23 12:05:38,021 | INFO | [rotation] Rotation completed for finding #255 (retries: 0)
+2026-05-23 12:05:38,047 | INFO | [rotation] Initiating mock rotation for finding #256 (GitHub Token (classic))
+2026-05-23 12:05:38,118 | INFO | [rotation] Rotation completed for finding #256 (retries: 0)
+2026-05-23 12:05:38,150 | INFO | [rotation] Initiating mock rotation for finding #258 (OpenAI API Key)
+2026-05-23 12:05:38,205 | INFO | [rotation] Rotation completed for finding #258 (retries: 0)
+2026-05-23 12:05:38,218 | INFO | [rotation] Initiating mock rotation for finding #260 (Stripe Secret Key)
+2026-05-23 12:05:38,262 | INFO | [rotation] Rotation completed for finding #260 (retries: 0)
+2026-05-23 12:05:38,290 | INFO | [rotation] Initiating mock rotation for finding #261 (Slack Bot Token)
+2026-05-23 12:05:38,345 | INFO | [rotation] Rotation completed for finding #261 (retries: 0)
+2026-05-23 12:05:38,370 | INFO | [rotation] Initiating mock rotation for finding #269 (GitLab Token)
+2026-05-23 12:05:38,461 | INFO | [rotation] Rotation completed for finding #269 (retries: 0)
+2026-05-23 12:05:38,501 | INFO | [rotation] Initiating mock rotation for finding #271 (GitHub OAuth)
+2026-05-23 12:05:38,564 | INFO | [rotation] Rotation completed for finding #271 (retries: 0)
+2026-05-23 12:05:38,595 | INFO | [rotation] Initiating mock rotation for finding #276 (SendGrid Key)
+2026-05-23 12:05:38,773 | INFO | [rotation] Rotation completed for finding #276 (retries: 1)
+2026-05-23 12:05:38,806 | INFO | [rotation] Initiating mock rotation for finding #277 (Database URL)
+2026-05-23 12:05:38,868 | INFO | [rotation] Rotation completed for finding #277 (retries: 0)
+2026-05-23 12:05:39,060 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:05:39,060 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:05:39,457 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_120539.html
+2026-05-23 12:05:39,592 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:05:39,592 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:06:13,609 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:06:38,425 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:06:38,969 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:06:39,035 | INFO | [rotation] Initiating mock rotation for finding #284 (Database URL)
+2026-05-23 12:06:39,095 | INFO | [rotation] Rotation completed for finding #284 (retries: 0)
+2026-05-23 12:06:39,125 | INFO | [rotation] Initiating mock rotation for finding #285 (AWS Access Key)
+2026-05-23 12:06:39,189 | INFO | [rotation] Rotation completed for finding #285 (retries: 0)
+2026-05-23 12:06:39,223 | INFO | [rotation] Initiating mock rotation for finding #286 (AWS Secret Key)
+2026-05-23 12:06:39,284 | INFO | [rotation] Rotation completed for finding #286 (retries: 0)
+2026-05-23 12:06:39,317 | INFO | [rotation] Initiating mock rotation for finding #287 (GitHub Token (classic))
+2026-05-23 12:06:39,396 | INFO | [rotation] Rotation completed for finding #287 (retries: 0)
+2026-05-23 12:06:39,419 | INFO | [rotation] Initiating mock rotation for finding #289 (OpenAI API Key)
+2026-05-23 12:06:39,459 | INFO | [rotation] Rotation completed for finding #289 (retries: 0)
+2026-05-23 12:06:39,484 | INFO | [rotation] Initiating mock rotation for finding #291 (Stripe Secret Key)
+2026-05-23 12:06:39,655 | INFO | [rotation] Rotation completed for finding #291 (retries: 1)
+2026-05-23 12:06:39,681 | INFO | [rotation] Initiating mock rotation for finding #292 (Slack Bot Token)
+2026-05-23 12:06:39,734 | INFO | [rotation] Rotation completed for finding #292 (retries: 0)
+2026-05-23 12:06:39,766 | INFO | [rotation] Initiating mock rotation for finding #297 (Database URL)
+2026-05-23 12:06:39,830 | INFO | [rotation] Rotation completed for finding #297 (retries: 0)
+2026-05-23 12:06:39,872 | INFO | [rotation] Initiating mock rotation for finding #308 (GitLab Token)
+2026-05-23 12:06:39,937 | INFO | [rotation] Rotation completed for finding #308 (retries: 0)
+2026-05-23 12:06:39,961 | INFO | [rotation] Initiating mock rotation for finding #310 (GitHub OAuth)
+2026-05-23 12:06:40,133 | INFO | [rotation] Rotation completed for finding #310 (retries: 1)
+2026-05-23 12:06:40,180 | INFO | [rotation] Initiating mock rotation for finding #314 (SendGrid Key)
+2026-05-23 12:06:40,245 | INFO | [rotation] Rotation completed for finding #314 (retries: 0)
+2026-05-23 12:06:40,418 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:06:40,418 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:06:40,822 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_120640.html
+2026-05-23 12:06:40,999 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:06:40,999 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:07:45,239 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:07:45,690 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:07:46,218 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:07:46,273 | INFO | [rotation] Initiating mock rotation for finding #338 (SendGrid Key)
+2026-05-23 12:07:46,328 | INFO | [rotation] Rotation completed for finding #338 (retries: 0)
+2026-05-23 12:07:46,355 | INFO | [rotation] Initiating mock rotation for finding #342 (GitLab Token)
+2026-05-23 12:07:46,389 | INFO | [rotation] Rotation completed for finding #342 (retries: 0)
+2026-05-23 12:07:46,418 | INFO | [rotation] Initiating mock rotation for finding #344 (GitHub OAuth)
+2026-05-23 12:07:46,465 | INFO | [rotation] Rotation completed for finding #344 (retries: 0)
+2026-05-23 12:07:46,497 | INFO | [rotation] Initiating mock rotation for finding #315 (Database URL)
+2026-05-23 12:07:46,562 | INFO | [rotation] Rotation completed for finding #315 (retries: 0)
+2026-05-23 12:07:46,588 | INFO | [rotation] Initiating mock rotation for finding #316 (AWS Access Key)
+2026-05-23 12:07:46,639 | INFO | [rotation] Rotation completed for finding #316 (retries: 0)
+2026-05-23 12:07:46,691 | INFO | [rotation] Initiating mock rotation for finding #317 (AWS Secret Key)
+2026-05-23 12:07:46,756 | INFO | [rotation] Rotation completed for finding #317 (retries: 0)
+2026-05-23 12:07:46,793 | INFO | [rotation] Initiating mock rotation for finding #318 (GitHub Token (classic))
+2026-05-23 12:07:46,855 | INFO | [rotation] Rotation completed for finding #318 (retries: 0)
+2026-05-23 12:07:46,871 | INFO | [rotation] Initiating mock rotation for finding #320 (OpenAI API Key)
+2026-05-23 12:07:46,950 | INFO | [rotation] Rotation completed for finding #320 (retries: 0)
+2026-05-23 12:07:46,966 | INFO | [rotation] Initiating mock rotation for finding #322 (Stripe Secret Key)
+2026-05-23 12:07:47,045 | INFO | [rotation] Rotation completed for finding #322 (retries: 0)
+2026-05-23 12:07:47,061 | INFO | [rotation] Initiating mock rotation for finding #323 (Slack Bot Token)
+2026-05-23 12:07:47,124 | INFO | [rotation] Rotation completed for finding #323 (retries: 0)
+2026-05-23 12:07:47,142 | INFO | [rotation] Initiating mock rotation for finding #329 (Database URL)
+2026-05-23 12:07:47,207 | INFO | [rotation] Rotation completed for finding #329 (retries: 0)
+2026-05-23 12:07:47,353 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:07:47,353 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:07:47,740 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_120747.html
+2026-05-23 12:07:47,890 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:07:47,890 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:23:23,904 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:23:38,036 | INFO | AWS connectivity check: {'ok': False, 'detail': 'Could not connect to the endpoint URL: "http://localhost:4566/"', 'mode': 'localstack'}
+2026-05-23 12:23:38,561 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:23:39,154 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:23:39,219 | INFO | [rotation] Initiating mock rotation for finding #372 (SendGrid Key)
+2026-05-23 12:23:39,285 | INFO | [rotation] Rotation completed for finding #372 (retries: 0)
+2026-05-23 12:23:39,319 | INFO | [rotation] Initiating mock rotation for finding #373 (GitLab Token)
+2026-05-23 12:23:39,371 | INFO | [rotation] Rotation completed for finding #373 (retries: 0)
+2026-05-23 12:23:39,401 | INFO | [rotation] Initiating mock rotation for finding #375 (GitHub OAuth)
+2026-05-23 12:23:39,471 | INFO | [rotation] Rotation completed for finding #375 (retries: 0)
+2026-05-23 12:23:39,500 | INFO | [rotation] Initiating mock rotation for finding #346 (Database URL)
+2026-05-23 12:23:39,569 | INFO | [rotation] Rotation completed for finding #346 (retries: 0)
+2026-05-23 12:23:39,598 | INFO | [rotation] Initiating mock rotation for finding #353 (Database URL)
+2026-05-23 12:23:39,667 | INFO | [rotation] Rotation completed for finding #353 (retries: 0)
+2026-05-23 12:23:39,694 | INFO | [rotation] Initiating mock rotation for finding #354 (AWS Access Key)
+2026-05-23 12:23:39,771 | INFO | [rotation] Rotation completed for finding #354 (retries: 0)
+2026-05-23 12:23:39,805 | INFO | [rotation] Initiating mock rotation for finding #355 (AWS Secret Key)
+2026-05-23 12:23:39,987 | INFO | [rotation] Rotation completed for finding #355 (retries: 1)
+2026-05-23 12:23:40,030 | INFO | [rotation] Initiating mock rotation for finding #356 (GitHub Token (classic))
+2026-05-23 12:23:40,219 | INFO | [rotation] Rotation completed for finding #356 (retries: 1)
+2026-05-23 12:23:40,249 | INFO | [rotation] Initiating mock rotation for finding #358 (OpenAI API Key)
+2026-05-23 12:23:40,431 | INFO | [rotation] Rotation completed for finding #358 (retries: 1)
+2026-05-23 12:23:40,469 | INFO | [rotation] Initiating mock rotation for finding #360 (Stripe Secret Key)
+2026-05-23 12:23:40,542 | INFO | [rotation] Rotation completed for finding #360 (retries: 0)
+2026-05-23 12:23:40,568 | INFO | [rotation] Initiating mock rotation for finding #361 (Slack Bot Token)
+2026-05-23 12:23:40,651 | INFO | [rotation] Rotation completed for finding #361 (retries: 0)
+2026-05-23 12:23:40,976 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:23:53,892 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:24:06,243 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:24:18,607 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:24:30,940 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:24:43,332 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:24:55,664 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:25:08,048 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:25:20,439 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:25:33,608 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:25:45,994 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:26:00,039 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:26:12,415 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:26:26,099 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:26:38,417 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:26:50,919 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:27:03,263 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:27:15,609 | WARNING | DynamoDB describe_table failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:27:28,764 | WARNING | SNS publish failed: Could not connect to the endpoint URL: "http://localhost:4566/"
+2026-05-23 12:38:46,014 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:38:46,636 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:38:46,721 | INFO | [rotation] Initiating mock rotation for finding #377 (Database URL)
+2026-05-23 12:38:46,936 | INFO | [rotation] Rotation completed for finding #377 (retries: 1)
+2026-05-23 12:38:46,969 | INFO | [rotation] Initiating mock rotation for finding #381 (GitLab Token)
+2026-05-23 12:38:47,177 | INFO | [rotation] Rotation completed for finding #381 (retries: 1)
+2026-05-23 12:38:47,217 | INFO | [rotation] Initiating mock rotation for finding #383 (GitHub OAuth)
+2026-05-23 12:38:47,287 | INFO | [rotation] Rotation completed for finding #383 (retries: 0)
+2026-05-23 12:38:47,327 | INFO | [rotation] Initiating mock rotation for finding #391 (SendGrid Key)
+2026-05-23 12:38:47,398 | INFO | [rotation] Rotation completed for finding #391 (retries: 0)
+2026-05-23 12:38:47,434 | INFO | [rotation] Initiating mock rotation for finding #394 (Database URL)
+2026-05-23 12:38:47,506 | INFO | [rotation] Rotation completed for finding #394 (retries: 0)
+2026-05-23 12:38:47,534 | INFO | [rotation] Initiating mock rotation for finding #395 (AWS Access Key)
+2026-05-23 12:38:47,603 | INFO | [rotation] Rotation completed for finding #395 (retries: 0)
+2026-05-23 12:38:47,626 | INFO | [rotation] Initiating mock rotation for finding #396 (AWS Secret Key)
+2026-05-23 12:38:47,709 | INFO | [rotation] Rotation completed for finding #396 (retries: 0)
+2026-05-23 12:38:47,739 | INFO | [rotation] Initiating mock rotation for finding #397 (GitHub Token (classic))
+2026-05-23 12:38:47,788 | INFO | [rotation] Rotation completed for finding #397 (retries: 0)
+2026-05-23 12:38:47,824 | INFO | [rotation] Initiating mock rotation for finding #399 (OpenAI API Key)
+2026-05-23 12:38:48,014 | INFO | [rotation] Rotation completed for finding #399 (retries: 1)
+2026-05-23 12:38:48,051 | INFO | [rotation] Initiating mock rotation for finding #401 (Stripe Secret Key)
+2026-05-23 12:38:48,119 | INFO | [rotation] Rotation completed for finding #401 (retries: 0)
+2026-05-23 12:38:48,161 | INFO | [rotation] Initiating mock rotation for finding #402 (Slack Bot Token)
+2026-05-23 12:38:48,251 | INFO | [rotation] Rotation completed for finding #402 (retries: 0)
+2026-05-23 12:38:48,593 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:38:48,593 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:38:49,236 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_123849.html
+2026-05-23 12:38:49,459 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:38:49,459 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:39:14,233 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://invalid-host:9999)
+2026-05-23 12:39:14,275 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:39:16,932 | WARNING | Could not connect to LocalStack (http://invalid-host:9999). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:39:16,932 | WARNING | [aws] [Errno 11001] getaddrinfo failed
+2026-05-23 12:39:18,985 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:39:19,736 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:39:19,825 | INFO | [rotation] Initiating mock rotation for finding #410 (SendGrid Key)
+2026-05-23 12:39:19,913 | INFO | [rotation] Rotation completed for finding #410 (retries: 0)
+2026-05-23 12:39:19,969 | INFO | [rotation] Initiating mock rotation for finding #415 (Database URL)
+2026-05-23 12:39:20,063 | INFO | [rotation] Rotation completed for finding #415 (retries: 0)
+2026-05-23 12:39:20,097 | INFO | [rotation] Initiating mock rotation for finding #416 (AWS Access Key)
+2026-05-23 12:39:20,179 | INFO | [rotation] Rotation completed for finding #416 (retries: 0)
+2026-05-23 12:39:20,229 | INFO | [rotation] Initiating mock rotation for finding #417 (AWS Secret Key)
+2026-05-23 12:39:20,315 | INFO | [rotation] Rotation completed for finding #417 (retries: 0)
+2026-05-23 12:39:20,351 | INFO | [rotation] Initiating mock rotation for finding #418 (GitHub Token (classic))
+2026-05-23 12:39:20,431 | INFO | [rotation] Rotation completed for finding #418 (retries: 0)
+2026-05-23 12:39:20,464 | INFO | [rotation] Initiating mock rotation for finding #420 (OpenAI API Key)
+2026-05-23 12:39:20,563 | INFO | [rotation] Rotation completed for finding #420 (retries: 0)
+2026-05-23 12:39:20,598 | INFO | [rotation] Initiating mock rotation for finding #422 (Stripe Secret Key)
+2026-05-23 12:39:20,683 | INFO | [rotation] Rotation completed for finding #422 (retries: 0)
+2026-05-23 12:39:20,724 | INFO | [rotation] Initiating mock rotation for finding #423 (Slack Bot Token)
+2026-05-23 12:39:20,826 | INFO | [rotation] Rotation completed for finding #423 (retries: 0)
+2026-05-23 12:39:20,887 | INFO | [rotation] Initiating mock rotation for finding #426 (GitLab Token)
+2026-05-23 12:39:20,988 | INFO | [rotation] Rotation completed for finding #426 (retries: 0)
+2026-05-23 12:39:21,032 | INFO | [rotation] Initiating mock rotation for finding #428 (GitHub OAuth)
+2026-05-23 12:39:21,130 | INFO | [rotation] Rotation completed for finding #428 (retries: 0)
+2026-05-23 12:39:21,171 | INFO | [rotation] Initiating mock rotation for finding #432 (Database URL)
+2026-05-23 12:39:21,234 | INFO | [rotation] Rotation completed for finding #432 (retries: 0)
+2026-05-23 12:39:21,448 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:39:25,546 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:39:25,546 | WARNING | [aws] Connection refused — is LocalStack running?
+2026-05-23 12:39:57,901 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:40:52,630 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:40:53,180 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:40:53,240 | INFO | [rotation] Initiating mock rotation for finding #461 (GitHub OAuth)
+2026-05-23 12:40:53,292 | INFO | [rotation] Rotation completed for finding #461 (retries: 0)
+2026-05-23 12:40:53,325 | INFO | [rotation] Initiating mock rotation for finding #466 (SendGrid Key)
+2026-05-23 12:40:53,401 | INFO | [rotation] Rotation completed for finding #466 (retries: 0)
+2026-05-23 12:40:53,436 | INFO | [rotation] Initiating mock rotation for finding #439 (Database URL)
+2026-05-23 12:40:53,501 | INFO | [rotation] Rotation completed for finding #439 (retries: 0)
+2026-05-23 12:40:53,531 | INFO | [rotation] Initiating mock rotation for finding #443 (Database URL)
+2026-05-23 12:40:53,568 | INFO | [rotation] Rotation completed for finding #443 (retries: 0)
+2026-05-23 12:40:53,583 | INFO | [rotation] Initiating mock rotation for finding #444 (AWS Access Key)
+2026-05-23 12:40:53,614 | INFO | [rotation] Rotation completed for finding #444 (retries: 0)
+2026-05-23 12:40:53,627 | INFO | [rotation] Initiating mock rotation for finding #445 (AWS Secret Key)
+2026-05-23 12:40:53,664 | INFO | [rotation] Rotation completed for finding #445 (retries: 0)
+2026-05-23 12:40:53,677 | INFO | [rotation] Initiating mock rotation for finding #446 (GitHub Token (classic))
+2026-05-23 12:40:53,709 | INFO | [rotation] Rotation completed for finding #446 (retries: 0)
+2026-05-23 12:40:53,721 | INFO | [rotation] Initiating mock rotation for finding #448 (OpenAI API Key)
+2026-05-23 12:40:53,752 | INFO | [rotation] Rotation completed for finding #448 (retries: 0)
+2026-05-23 12:40:53,763 | INFO | [rotation] Initiating mock rotation for finding #450 (Stripe Secret Key)
+2026-05-23 12:40:53,794 | INFO | [rotation] Rotation completed for finding #450 (retries: 0)
+2026-05-23 12:40:53,807 | INFO | [rotation] Initiating mock rotation for finding #451 (Slack Bot Token)
+2026-05-23 12:40:53,845 | INFO | [rotation] Rotation completed for finding #451 (retries: 0)
+2026-05-23 12:40:53,864 | INFO | [rotation] Initiating mock rotation for finding #459 (GitLab Token)
+2026-05-23 12:40:53,896 | INFO | [rotation] Rotation completed for finding #459 (retries: 0)
+2026-05-23 12:40:54,143 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:40:54,143 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 12:40:54,703 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_124054.html
+2026-05-23 12:40:54,872 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:40:54,872 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:40:55,497 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:40:56,117 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:41:00,690 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:41:01,363 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:41:01,434 | INFO | [rotation] Initiating mock rotation for finding #484 (GitHub Token (classic))
+2026-05-23 12:41:01,514 | INFO | [rotation] Rotation completed for finding #484 (retries: 0)
+2026-05-23 12:41:01,570 | INFO | [rotation] Initiating mock rotation for finding #486 (OpenAI API Key)
+2026-05-23 12:41:01,763 | INFO | [rotation] Rotation completed for finding #486 (retries: 1)
+2026-05-23 12:41:01,797 | INFO | [rotation] Initiating mock rotation for finding #488 (Stripe Secret Key)
+2026-05-23 12:41:01,856 | INFO | [rotation] Rotation completed for finding #488 (retries: 0)
+2026-05-23 12:41:01,899 | INFO | [rotation] Initiating mock rotation for finding #489 (Slack Bot Token)
+2026-05-23 12:41:01,962 | INFO | [rotation] Rotation completed for finding #489 (retries: 0)
+2026-05-23 12:41:01,998 | INFO | [rotation] Initiating mock rotation for finding #494 (GitLab Token)
+2026-05-23 12:41:02,054 | INFO | [rotation] Rotation completed for finding #494 (retries: 0)
+2026-05-23 12:41:02,079 | INFO | [rotation] Initiating mock rotation for finding #496 (GitHub OAuth)
+2026-05-23 12:41:02,150 | INFO | [rotation] Rotation completed for finding #496 (retries: 0)
+2026-05-23 12:41:02,187 | INFO | [rotation] Initiating mock rotation for finding #500 (SendGrid Key)
+2026-05-23 12:41:02,266 | INFO | [rotation] Rotation completed for finding #500 (retries: 0)
+2026-05-23 12:41:02,305 | INFO | [rotation] Initiating mock rotation for finding #474 (Database URL)
+2026-05-23 12:41:02,373 | INFO | [rotation] Rotation completed for finding #474 (retries: 0)
+2026-05-23 12:41:02,401 | INFO | [rotation] Initiating mock rotation for finding #481 (Database URL)
+2026-05-23 12:41:02,463 | INFO | [rotation] Rotation completed for finding #481 (retries: 0)
+2026-05-23 12:41:02,492 | INFO | [rotation] Initiating mock rotation for finding #482 (AWS Access Key)
+2026-05-23 12:41:02,555 | INFO | [rotation] Rotation completed for finding #482 (retries: 0)
+2026-05-23 12:41:02,583 | INFO | [rotation] Initiating mock rotation for finding #483 (AWS Secret Key)
+2026-05-23 12:41:02,649 | INFO | [rotation] Rotation completed for finding #483 (retries: 0)
+2026-05-23 12:41:02,922 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:41:07,013 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:41:07,013 | WARNING | [aws] Connection refused — is LocalStack running?
+2026-05-23 12:41:28,113 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:41:32,693 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:41:33,245 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:41:33,300 | INFO | [rotation] Initiating mock rotation for finding #521 (GitLab Token)
+2026-05-23 12:41:33,372 | INFO | [rotation] Rotation completed for finding #521 (retries: 0)
+2026-05-23 12:41:33,397 | INFO | [rotation] Initiating mock rotation for finding #523 (GitHub OAuth)
+2026-05-23 12:41:33,475 | INFO | [rotation] Rotation completed for finding #523 (retries: 0)
+2026-05-23 12:41:33,504 | INFO | [rotation] Initiating mock rotation for finding #528 (SendGrid Key)
+2026-05-23 12:41:33,565 | INFO | [rotation] Rotation completed for finding #528 (retries: 0)
+2026-05-23 12:41:33,595 | INFO | [rotation] Initiating mock rotation for finding #504 (Database URL)
+2026-05-23 12:41:33,648 | INFO | [rotation] Rotation completed for finding #504 (retries: 0)
+2026-05-23 12:41:33,677 | INFO | [rotation] Initiating mock rotation for finding #508 (Database URL)
+2026-05-23 12:41:33,870 | INFO | [rotation] Rotation completed for finding #508 (retries: 1)
+2026-05-23 12:41:33,908 | INFO | [rotation] Initiating mock rotation for finding #509 (AWS Access Key)
+2026-05-23 12:41:33,974 | INFO | [rotation] Rotation completed for finding #509 (retries: 0)
+2026-05-23 12:41:34,001 | INFO | [rotation] Initiating mock rotation for finding #510 (AWS Secret Key)
+2026-05-23 12:41:34,080 | INFO | [rotation] Rotation completed for finding #510 (retries: 0)
+2026-05-23 12:41:34,110 | INFO | [rotation] Initiating mock rotation for finding #511 (GitHub Token (classic))
+2026-05-23 12:41:34,176 | INFO | [rotation] Rotation completed for finding #511 (retries: 0)
+2026-05-23 12:41:34,208 | INFO | [rotation] Initiating mock rotation for finding #513 (OpenAI API Key)
+2026-05-23 12:41:34,275 | INFO | [rotation] Rotation completed for finding #513 (retries: 0)
+2026-05-23 12:41:34,301 | INFO | [rotation] Initiating mock rotation for finding #515 (Stripe Secret Key)
+2026-05-23 12:41:34,367 | INFO | [rotation] Rotation completed for finding #515 (retries: 0)
+2026-05-23 12:41:34,397 | INFO | [rotation] Initiating mock rotation for finding #516 (Slack Bot Token)
+2026-05-23 12:41:34,447 | INFO | [rotation] Rotation completed for finding #516 (retries: 0)
+2026-05-23 12:41:34,728 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:41:38,801 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:41:38,801 | WARNING | [aws] Connection refused — is LocalStack running?
+2026-05-23 12:41:39,415 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_124139.html
+2026-05-23 12:41:39,653 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:41:43,737 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:41:43,738 | WARNING | [aws] Connection refused — is LocalStack running?
+2026-05-23 12:41:44,561 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://invalid-host:9999)
+2026-05-23 12:49:36,967 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_124936.html
+2026-05-23 12:49:37,200 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:49:37,200 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:49:51,997 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:49:54,864 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://invalid-host:9999)
+2026-05-23 12:49:56,450 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_124956.html
+2026-05-23 12:49:56,719 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:49:58,344 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 12:50:00,792 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:50:00,793 | WARNING | [aws] S3 export skipped — LocalStack unavailable
+2026-05-23 12:50:18,486 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:50:19,159 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:50:19,226 | INFO | [rotation] Initiating mock rotation for finding #556 (Stripe Secret Key)
+2026-05-23 12:50:19,300 | INFO | [rotation] Rotation completed for finding #556 (retries: 0)
+2026-05-23 12:50:19,333 | INFO | [rotation] Initiating mock rotation for finding #557 (Slack Bot Token)
+2026-05-23 12:50:19,430 | INFO | [rotation] Rotation completed for finding #557 (retries: 0)
+2026-05-23 12:50:19,481 | INFO | [rotation] Initiating mock rotation for finding #533 (GitLab Token)
+2026-05-23 12:50:19,598 | INFO | [rotation] Rotation completed for finding #533 (retries: 0)
+2026-05-23 12:50:19,673 | INFO | [rotation] Initiating mock rotation for finding #535 (GitHub OAuth)
+2026-05-23 12:50:19,745 | INFO | [rotation] Rotation completed for finding #535 (retries: 0)
+2026-05-23 12:50:19,776 | INFO | [rotation] Initiating mock rotation for finding #539 (SendGrid Key)
+2026-05-23 12:50:19,840 | INFO | [rotation] Rotation completed for finding #539 (retries: 0)
+2026-05-23 12:50:19,873 | INFO | [rotation] Initiating mock rotation for finding #545 (Database URL)
+2026-05-23 12:50:19,943 | INFO | [rotation] Rotation completed for finding #545 (retries: 0)
+2026-05-23 12:50:19,973 | INFO | [rotation] Initiating mock rotation for finding #549 (Database URL)
+2026-05-23 12:50:20,040 | INFO | [rotation] Rotation completed for finding #549 (retries: 0)
+2026-05-23 12:50:20,072 | INFO | [rotation] Initiating mock rotation for finding #550 (AWS Access Key)
+2026-05-23 12:50:20,140 | INFO | [rotation] Rotation completed for finding #550 (retries: 0)
+2026-05-23 12:50:20,173 | INFO | [rotation] Initiating mock rotation for finding #551 (AWS Secret Key)
+2026-05-23 12:50:20,240 | INFO | [rotation] Rotation completed for finding #551 (retries: 0)
+2026-05-23 12:50:20,270 | INFO | [rotation] Initiating mock rotation for finding #552 (GitHub Token (classic))
+2026-05-23 12:50:20,345 | INFO | [rotation] Rotation completed for finding #552 (retries: 0)
+2026-05-23 12:50:20,374 | INFO | [rotation] Initiating mock rotation for finding #554 (OpenAI API Key)
+2026-05-23 12:50:20,439 | INFO | [rotation] Rotation completed for finding #554 (retries: 0)
+2026-05-23 12:50:20,662 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:50:24,707 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:50:24,707 | WARNING | [aws] Connection refused — is LocalStack running?
+2026-05-23 12:50:55,514 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_125055.html
+2026-05-23 12:50:55,671 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 12:50:55,671 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 12:50:56,254 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:51:00,855 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_125100.html
+2026-05-23 12:51:01,039 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://localhost:4566)
+2026-05-23 12:51:05,135 | WARNING | Could not connect to LocalStack (http://localhost:4566). Skipping AWS exports. LocalStack may still be starting. Wait ~15-30 seconds after `docker run`, then run `python main.py aws-check` again.
+2026-05-23 12:51:05,136 | WARNING | [aws] S3 export skipped — LocalStack unavailable
+2026-05-23 12:51:05,717 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=http://invalid-host:9999)
+2026-05-23 12:51:08,985 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 12:51:09,428 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 12:51:09,909 | INFO | [scanner] Scan complete: 10 files, 31 secrets found
+2026-05-23 12:51:09,974 | INFO | [rotation] Initiating mock rotation for finding #563 (Database URL)
+2026-05-23 12:51:10,040 | INFO | [rotation] Rotation completed for finding #563 (retries: 0)
+2026-05-23 12:51:10,066 | INFO | [rotation] Initiating mock rotation for finding #567 (Database URL)
+2026-05-23 12:51:10,256 | INFO | [rotation] Rotation completed for finding #567 (retries: 1)
+2026-05-23 12:51:10,288 | INFO | [rotation] Initiating mock rotation for finding #568 (AWS Access Key)
+2026-05-23 12:51:10,351 | INFO | [rotation] Rotation completed for finding #568 (retries: 0)
+2026-05-23 12:51:10,383 | INFO | [rotation] Initiating mock rotation for finding #569 (AWS Secret Key)
+2026-05-23 12:51:10,450 | INFO | [rotation] Rotation completed for finding #569 (retries: 0)
+2026-05-23 12:51:10,487 | INFO | [rotation] Initiating mock rotation for finding #570 (GitHub Token (classic))
+2026-05-23 12:51:10,565 | INFO | [rotation] Rotation completed for finding #570 (retries: 0)
+2026-05-23 12:51:10,596 | INFO | [rotation] Initiating mock rotation for finding #572 (OpenAI API Key)
+2026-05-23 12:51:10,669 | INFO | [rotation] Rotation completed for finding #572 (retries: 0)
+2026-05-23 12:51:10,710 | INFO | [rotation] Initiating mock rotation for finding #574 (Stripe Secret Key)
+2026-05-23 12:51:10,794 | INFO | [rotation] Rotation completed for finding #574 (retries: 0)
+2026-05-23 12:51:10,830 | INFO | [rotation] Initiating mock rotation for finding #575 (Slack Bot Token)
+2026-05-23 12:51:10,904 | INFO | [rotation] Rotation completed for finding #575 (retries: 0)
+2026-05-23 12:51:10,939 | INFO | [rotation] Initiating mock rotation for finding #584 (GitLab Token)
+2026-05-23 12:51:11,003 | INFO | [rotation] Rotation completed for finding #584 (retries: 0)
+2026-05-23 12:51:11,032 | INFO | [rotation] Initiating mock rotation for finding #586 (GitHub OAuth)
+2026-05-23 12:51:11,097 | INFO | [rotation] Rotation completed for finding #586 (retries: 0)
+2026-05-23 12:51:11,126 | INFO | [rotation] Initiating mock rotation for finding #593 (SendGrid Key)
+2026-05-23 12:51:11,324 | INFO | [rotation] Rotation completed for finding #593 (retries: 1)
+2026-05-23 12:51:11,519 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 12:51:11,519 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
+2026-05-23 12:51:11,519 | WARNING | [aws] Invalid LocalStack endpoint URL.
+2026-05-23 13:07:37,835 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:07:38,386 | INFO | [scanner] Scan complete: 10 files, 31 grouped findings (31 raw)
+2026-05-23 13:07:38,455 | INFO | [rotation] Initiating mock rotation for finding #602 (GitLab Token)
+2026-05-23 13:07:38,520 | INFO | [rotation] Rotation completed for finding #602 (retries: 0)
+2026-05-23 13:07:38,548 | INFO | [rotation] Initiating mock rotation for finding #603 (Google API Key)
+2026-05-23 13:07:38,736 | INFO | [rotation] Rotation completed for finding #603 (retries: 1)
+2026-05-23 13:07:38,770 | INFO | [rotation] Initiating mock rotation for finding #604 (SendGrid Key)
+2026-05-23 13:07:38,828 | INFO | [rotation] Rotation completed for finding #604 (retries: 0)
+2026-05-23 13:07:38,856 | INFO | [rotation] Initiating mock rotation for finding #605 (Mailgun Key)
+2026-05-23 13:07:39,056 | INFO | [rotation] Rotation completed for finding #605 (retries: 1)
+2026-05-23 13:07:39,101 | INFO | [rotation] Initiating mock rotation for finding #594 (GitHub Token (classic))
+2026-05-23 13:07:39,186 | INFO | [rotation] Rotation completed for finding #594 (retries: 0)
+2026-05-23 13:07:39,234 | INFO | [rotation] Initiating mock rotation for finding #595 (OpenAI API Key)
+2026-05-23 13:07:39,310 | INFO | [rotation] Rotation completed for finding #595 (retries: 0)
+2026-05-23 13:07:39,357 | INFO | [rotation] Initiating mock rotation for finding #596 (Stripe Secret Key)
+2026-05-23 13:07:39,423 | INFO | [rotation] Rotation completed for finding #596 (retries: 0)
+2026-05-23 13:07:39,461 | INFO | [rotation] Initiating mock rotation for finding #597 (Slack Bot Token)
+2026-05-23 13:07:39,522 | INFO | [rotation] Rotation completed for finding #597 (retries: 0)
+2026-05-23 13:07:39,556 | INFO | [rotation] Initiating mock rotation for finding #598 (Database URL)
+2026-05-23 13:07:39,644 | INFO | [rotation] Rotation completed for finding #598 (retries: 0)
+2026-05-23 13:07:39,672 | INFO | [rotation] Initiating mock rotation for finding #599 (Database URL)
+2026-05-23 13:07:39,875 | INFO | [rotation] Rotation completed for finding #599 (retries: 1)
+2026-05-23 13:07:39,912 | INFO | [rotation] Initiating mock rotation for finding #600 (Private Key Block)
+2026-05-23 13:07:39,991 | INFO | [rotation] Rotation completed for finding #600 (retries: 0)
+2026-05-23 13:07:40,022 | INFO | [rotation] Initiating mock rotation for finding #601 (GitHub OAuth)
+2026-05-23 13:07:40,115 | INFO | [rotation] Rotation completed for finding #601 (retries: 0)
+2026-05-23 13:07:40,303 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:07:40,303 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 13:07:40,824 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_130740.html
+2026-05-23 13:07:40,985 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:07:40,985 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 13:08:07,298 | INFO | [history] Scanning commit history for C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:08:08,377 | INFO | [history] History scan complete: 4 commits, 34 leaks found
+2026-05-23 13:09:19,813 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:09:20,052 | INFO | [scanner] Scan complete: 10 files, 31 grouped findings (31 raw)
+2026-05-23 13:09:20,087 | INFO | [rotation] Initiating mock rotation for finding #625 (GitHub Token (classic))
+2026-05-23 13:09:20,112 | INFO | [rotation] Rotation completed for finding #625 (retries: 0)
+2026-05-23 13:09:20,129 | INFO | [rotation] Initiating mock rotation for finding #626 (OpenAI API Key)
+2026-05-23 13:09:20,164 | INFO | [rotation] Rotation completed for finding #626 (retries: 0)
+2026-05-23 13:09:20,176 | INFO | [rotation] Initiating mock rotation for finding #627 (Stripe Secret Key)
+2026-05-23 13:09:20,203 | INFO | [rotation] Rotation completed for finding #627 (retries: 0)
+2026-05-23 13:09:20,213 | INFO | [rotation] Initiating mock rotation for finding #628 (Slack Bot Token)
+2026-05-23 13:09:20,379 | INFO | [rotation] Rotation completed for finding #628 (retries: 1)
+2026-05-23 13:09:20,409 | INFO | [rotation] Initiating mock rotation for finding #629 (Database URL)
+2026-05-23 13:09:20,455 | INFO | [rotation] Rotation completed for finding #629 (retries: 0)
+2026-05-23 13:09:20,488 | INFO | [rotation] Initiating mock rotation for finding #630 (Database URL)
+2026-05-23 13:09:20,653 | INFO | [rotation] Rotation completed for finding #630 (retries: 1)
+2026-05-23 13:09:20,685 | INFO | [rotation] Initiating mock rotation for finding #631 (Private Key Block)
+2026-05-23 13:09:20,881 | INFO | [rotation] Rotation completed for finding #631 (retries: 1)
+2026-05-23 13:09:20,912 | INFO | [rotation] Initiating mock rotation for finding #632 (GitHub OAuth)
+2026-05-23 13:09:20,983 | INFO | [rotation] Rotation completed for finding #632 (retries: 0)
+2026-05-23 13:09:21,016 | INFO | [rotation] Initiating mock rotation for finding #633 (GitLab Token)
+2026-05-23 13:09:21,076 | INFO | [rotation] Rotation completed for finding #633 (retries: 0)
+2026-05-23 13:09:21,108 | INFO | [rotation] Initiating mock rotation for finding #634 (Google API Key)
+2026-05-23 13:09:21,169 | INFO | [rotation] Rotation completed for finding #634 (retries: 0)
+2026-05-23 13:09:21,190 | INFO | [rotation] Initiating mock rotation for finding #635 (SendGrid Key)
+2026-05-23 13:09:21,242 | INFO | [rotation] Rotation completed for finding #635 (retries: 0)
+2026-05-23 13:09:21,274 | INFO | [rotation] Initiating mock rotation for finding #636 (Mailgun Key)
+2026-05-23 13:09:21,461 | INFO | [rotation] Rotation completed for finding #636 (retries: 1)
+2026-05-23 13:09:21,656 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 13:09:21,656 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
+2026-05-23 13:09:21,656 | WARNING | [aws] Invalid LocalStack endpoint URL.
+2026-05-23 13:09:36,251 | INFO | [history] Scanning commit history for C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:09:37,355 | INFO | [history] History scan complete: 4 commits, 34 leaks found
+2026-05-23 13:09:47,791 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_130947.html
+2026-05-23 13:09:47,979 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 13:09:47,979 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
+2026-05-23 13:09:47,979 | WARNING | [aws] S3 export skipped — LocalStack unavailable
+2026-05-23 13:14:54,356 | INFO | [ingestion] Cloning https://github.com/octocat/Hello-World.git -> C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_p_hgrc8s
+2026-05-23 13:14:56,619 | INFO | [scanner] Starting scan of C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_p_hgrc8s
+2026-05-23 13:14:56,659 | INFO | [scanner] Scan complete: 0 files, 0 grouped findings (0 raw)
+2026-05-23 13:14:56,875 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 13:14:56,875 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
+2026-05-23 13:14:56,875 | WARNING | [aws] Invalid LocalStack endpoint URL.
+2026-05-23 13:14:56,896 | INFO | [ingestion] Cleaned up temporary workspace: C:\Users\yaswa\AppData\Local\Temp\gitguard_clone_p_hgrc8s (success)
+2026-05-23 13:14:56,904 | INFO | [ingestion] Ingestion remote: https://github.com/octocat/hello-world | allowlist=pass | clone=success | cleanup=success
+2026-05-23 13:19:50,543 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:19:51,078 | INFO | [scanner] Scan complete: 10 files, 31 grouped findings (31 raw)
+2026-05-23 13:19:51,153 | INFO | [rotation] Initiating mock rotation for finding #656 (GitHub Token (classic))
+2026-05-23 13:19:51,245 | INFO | [rotation] Rotation completed for finding #656 (retries: 0)
+2026-05-23 13:19:51,278 | INFO | [rotation] Initiating mock rotation for finding #657 (OpenAI API Key)
+2026-05-23 13:19:51,476 | INFO | [rotation] Rotation completed for finding #657 (retries: 1)
+2026-05-23 13:19:51,510 | INFO | [rotation] Initiating mock rotation for finding #658 (Stripe Secret Key)
+2026-05-23 13:19:51,578 | INFO | [rotation] Rotation completed for finding #658 (retries: 0)
+2026-05-23 13:19:51,610 | INFO | [rotation] Initiating mock rotation for finding #659 (Slack Bot Token)
+2026-05-23 13:19:51,681 | INFO | [rotation] Rotation completed for finding #659 (retries: 0)
+2026-05-23 13:19:51,710 | INFO | [rotation] Initiating mock rotation for finding #660 (Database URL)
+2026-05-23 13:19:51,776 | INFO | [rotation] Rotation completed for finding #660 (retries: 0)
+2026-05-23 13:19:51,810 | INFO | [rotation] Initiating mock rotation for finding #661 (Database URL)
+2026-05-23 13:19:51,880 | INFO | [rotation] Rotation completed for finding #661 (retries: 0)
+2026-05-23 13:19:51,911 | INFO | [rotation] Initiating mock rotation for finding #662 (Private Key Block)
+2026-05-23 13:19:51,978 | INFO | [rotation] Rotation completed for finding #662 (retries: 0)
+2026-05-23 13:19:52,012 | INFO | [rotation] Initiating mock rotation for finding #663 (GitHub OAuth)
+2026-05-23 13:19:52,078 | INFO | [rotation] Rotation completed for finding #663 (retries: 0)
+2026-05-23 13:19:52,109 | INFO | [rotation] Initiating mock rotation for finding #664 (GitLab Token)
+2026-05-23 13:19:52,176 | INFO | [rotation] Rotation completed for finding #664 (retries: 0)
+2026-05-23 13:19:52,211 | INFO | [rotation] Initiating mock rotation for finding #665 (Google API Key)
+2026-05-23 13:19:52,279 | INFO | [rotation] Rotation completed for finding #665 (retries: 0)
+2026-05-23 13:19:52,309 | INFO | [rotation] Initiating mock rotation for finding #666 (SendGrid Key)
+2026-05-23 13:19:52,379 | INFO | [rotation] Rotation completed for finding #666 (retries: 0)
+2026-05-23 13:19:52,411 | INFO | [rotation] Initiating mock rotation for finding #667 (Mailgun Key)
+2026-05-23 13:19:52,478 | INFO | [rotation] Rotation completed for finding #667 (retries: 0)
+2026-05-23 13:19:52,633 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:19:52,633 | DEBUG | [aws] Post-scan AWS export skipped (AWS disabled)
+2026-05-23 13:21:03,107 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_132103.html
+2026-05-23 13:21:03,241 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:21:03,241 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 13:23:06,587 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_132306.html
+2026-05-23 13:23:06,926 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:23:06,926 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 13:26:23,162 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_132623.html
+2026-05-23 13:26:23,346 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
+2026-05-23 13:26:23,346 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
+2026-05-23 13:26:23,346 | WARNING | [aws] S3 export skipped — LocalStack unavailable
