@@ -737,3 +737,6 @@
 2026-05-23 13:26:23,346 | INFO | AWS client initialized (LocalStack, region=ap-south-1, endpoint=not-a-valid-url!!!)
 2026-05-23 13:26:23,346 | WARNING | Could not connect to LocalStack (not-a-valid-url!!!). Skipping AWS exports. Use a URL like http://localhost:4566
 2026-05-23 13:26:23,346 | WARNING | [aws] S3 export skipped — LocalStack unavailable
+2026-05-23 13:32:42,048 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_133242.html
+2026-05-23 13:32:42,196 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:32:42,196 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
