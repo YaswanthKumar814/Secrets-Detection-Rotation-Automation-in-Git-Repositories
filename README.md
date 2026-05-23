@@ -86,6 +86,8 @@ python main.py dashboard
 
 ---
 
+> **Full beginner guide:** See [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) for architecture, pipeline, and module-by-module explanation.
+
 ## Quick Start
 
 ```bash
