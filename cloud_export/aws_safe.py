@@ -1,4 +1,7 @@
-"""Safe AWS error detection and non-blocking operation helpers."""
+"""Safe AWS error detection and non-blocking operation helpers.
+
+Scans and reports must never fail when LocalStack/AWS is down; callers use safe_aws_call().
+"""
 
 from __future__ import annotations
 

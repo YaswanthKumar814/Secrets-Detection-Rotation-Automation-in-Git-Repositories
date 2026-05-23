@@ -1,542 +1,274 @@
-# 🛡️ GitGuard
+<div align="center">
 
-**Hybrid Git secret detection pipeline with controlled repository ingestion, risk intelligence, and SOC-style visibility.**
+# GitGuard
 
-A defensive cybersecurity tool that scans Git repositories for leaked secrets, maps findings to MITRE ATT&CK, groups duplicates, performs mock credential rotation, and presents executive-ready analytics through a Flask dashboard and HTML reports.
+**Defensive secret detection for Git repositories**
 
-> Built for a cybersecurity hackathon — local-first, presentation-ready, with optional LocalStack cloud export.
+Find leaked API keys, tokens, and credentials hiding in your code and commit history — before attackers do.
+
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red?logo=data:image/svg+xml;base64,)](https://attack.mitre.org/)
+
+[Quick Start](#quick-start) · [Features](#features) · [Architecture](#architecture) · [CLI Reference](#cli-reference) · [Dashboard](#dashboard--reports) · [Configuration](#configuration) · [Project Guide](docs/PROJECT_GUIDE.md)
+
+</div>
 
 ---
 
-## Problem Statement
+## Quick Start
 
-Developers accidentally commit API keys, tokens, and passwords into Git repositories. Once pushed, secrets remain in **current files** and often in **commit history**, enabling credential theft (MITRE ATT&CK T1552). Manual review does not scale; enterprise tools are heavy for demos and labs.
+```bash
+# 1. Clone & install
+git clone https://github.com/your-org/gitguard.git
+cd gitguard
+pip install -r requirements.txt
 
-**GitGuard** provides a lightweight, judge-friendly pipeline: detect → classify → map to ATT&CK → group → remediate (mock) → report → visualize.
+# 2. Run the full demo (scan + history + report)
+python main.py demo
 
----
+# 3. Launch the web dashboard
+python main.py dashboard
+# → Open http://127.0.0.1:5000
+```
 
-## Threat Model
-
-| Threat | Mitigation in GitGuard |
-|--------|------------------------|
-| Secrets in working tree | Regex + entropy scanner |
-| Secrets in Git history | `history-scan` on commits/diffs |
-| Re-commit after rotation | Real-time `monitor` (watchdog) |
-| Unauthorized repo scanning | `allowlist.yaml` enforcement |
-| Mass GitHub crawling | Only explicit URLs in allowlist/targets |
-| Credential exposure in UI | Masked previews only; no full secrets stored |
-| Cloud dependency for demos | Local SQLite + optional LocalStack |
-
-**Out of scope:** Real credential validation/rotation, production IAM, CI/CD plugins (future work).
+> **No cloud account required.** GitGuard runs entirely on your machine. AWS/LocalStack integration is optional and disabled by default.
 
 ---
 
 ## Features
 
-- **Secret Detection** — 25+ regex patterns for AWS keys, GitHub tokens, Slack tokens, Stripe keys, SSH keys, JWTs, database URLs, and more
-- **Entropy Analysis** — Shannon entropy scoring to reduce false positives
-- **Git History Scanning** — Detect secrets buried in old commits and diffs
-- **Severity Scoring** — 0–100 severity score mapped to Critical/High/Medium/Low
-- **Mock Credential Validation** — Simulated ACTIVE/EXPIRED/TEST/INVALID/UNKNOWN checks
-- **Mock Rotation Workflow** — Automated remediation with audit trail and retry logic
-- **Real-Time Monitoring** — Watchdog-based file change detection with polling fallback
-- **SOC-Style Dashboard** — Dark theme Flask dashboard with 9 pages and Chart.js visualizations
-- **HTML Report Generator** — Executive summary with findings, remediation history, and MITRE ATT&CK mapping
-- **Rich CLI** — Beautiful terminal output with progress bars and tables
-- **Demo Repository Generator** — Creates a test repo with realistic fake secrets
-- **One-Command Demo** — `python main.py demo` runs scan + history + report end-to-end
-- **Executive Summary** — Risk posture on dashboard home and HTML reports
-- **Hybrid Repository Ingestion** — Scan local paths or allowlisted GitHub URLs
-- **Mandatory Allowlist** — Remote and batch scans require explicit approval in `allowlist.yaml`
-- **Batch Target Scanning** — Scan multiple repos from `targets.yaml`
+| Capability | Description |
+|:---|:---|
+| **File Scanning** | Walks repo trees, matches 25+ secret patterns (AWS keys, GitHub tokens, Stripe keys, JWTs, PEM blocks, DB URLs, and more) |
+| **Git History Scanning** | Inspects commit diffs to uncover secrets that were "deleted" but live on in history |
+| **Risk Scoring** | Three-dimensional scoring: *severity* (how dangerous), *confidence* (how likely it's real), *exposure* (how accessible the file is) |
+| **MITRE ATT&CK Mapping** | Every finding linked to an ATT&CK technique (T1552, T1552.001, T1552.004, etc.) with dashboard hyperlinks |
+| **Duplicate Grouping** | Same secret across multiple files → one row with `occurrence_count` and an expandable file list |
+| **Web Dashboard** | Flask + Bootstrap 5 + Chart.js — overview, findings table, analytics charts, history, rotations, monitoring, reports |
+| **HTML Reports** | Executive-ready, printable reports with risk banners, ATT&CK tables, remediation checklists |
+| **Real-Time Monitoring** | Watchdog-based file watcher that re-scans on changes |
+| **Mock Credential Rotation** | Simulates rotation workflows with an audit log (does not revoke real keys) |
+| **Cloud Export (optional)** | Push reports to S3, alerts to SNS, summaries to DynamoDB via AWS or LocalStack |
 
 ---
 
-## 5-Minute Hackathon Demo
+## Architecture
 
-**Fastest path** — one command prepares all demo data:
+```
+┌─────────────────────────────────────────────┐
+│  PRESENTATION                               │
+│  main.py  ·  dashboard/  ·  reports/        │
+└─────────────────────┬───────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────┐
+│  INTELLIGENCE                               │
+│  risk_intel/ (scores, ATT&CK, grouping)     │
+└─────────────────────┬───────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────┐
+│  DETECTION + STORAGE                        │
+│  scanner/  ·  git_history/  ·  regex_engine/│
+│  entropy/  ·  database/ (SQLite)            │
+└─────────────────────────────────────────────┘
 
-```powershell
-pip install -r requirements.txt
-python main.py demo
-python main.py dashboard
+Optional: cloud_export/ → S3, SNS, DynamoDB
 ```
 
-Open **http://127.0.0.1:5000** and walk judges through this order:
+### Detection Pipeline
 
-| Step | Action | What to say |
-|------|--------|-------------|
-| 1 | **Overview** (`/`) | Executive summary, risk level, ATT&CK coverage, last scan |
-| 2 | **Findings** (`/findings`) | Severity, confidence, exposure, grouped duplicates, remediation |
-| 3 | **Analytics** (`/analytics`) | Severity/confidence charts, top secret types, ATT&CK distribution |
-| 4 | Open `reports_output/gitguard_report_*.html` | Printable executive report for stakeholders |
-| 5 | **History** (`/history`) | Secrets buried in old commits |
-| 6 | *(Optional)* `python main.py aws-check` | LocalStack-safe cloud export story |
-
-**Manual equivalent** (if you prefer step-by-step):
-
-```powershell
-python main.py generate-test-repo
-python main.py scan ./test_repo
-python main.py history-scan ./test_repo
-python main.py report
-python main.py dashboard
+```
+Repository
+  → ① Pick files (skip node_modules, .git, venv; allowed extensions only; <512 KB)
+  → ② Read lines (4-thread parallel)
+  → ③ Regex match (25+ secret patterns)
+  → ④ Shannon entropy scoring (filters placeholders like "changeme")
+  → ⑤ Risk enrichment (severity, confidence, exposure, ATT&CK, remediation)
+  → ⑥ Group duplicates (merge same secret across files)
+  → ⑦ Save to SQLite
+  → ⑧ Display: CLI table / Web dashboard / HTML report
 ```
 
 ---
 
-> **Full beginner guide:** See [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) for architecture, pipeline, and module-by-module explanation.
-
-## Quick Start
+## CLI Reference
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-
-# 2. Run full demo (recommended)
-python main.py demo
-
-# 2b. Or generate a demo test repo manually
-python main.py generate-test-repo
-
-# 3. Scan for secrets (local)
-python main.py scan ./test_repo
-
-# 3b. Scan a remote repo (must be in allowlist.yaml)
-python main.py scan-remote https://github.com/octocat/Hello-World.git
-
-# 3c. Batch scan configured targets
-python main.py scan-targets targets.yaml
-
-# 4. Scan commit history
-python main.py history-scan ./test_repo
-
-# 5. Generate a report
-python main.py report
-
-# 6. Launch the dashboard
-python main.py dashboard
-# Open http://127.0.0.1:5000 in your browser
+python main.py <command> [arguments]
 ```
-
-## CLI Commands
 
 | Command | Description |
-|---------|-------------|
-| `python main.py scan <path>` | Scan a local repository for secrets |
-| `python main.py scan-remote <repo_url>` | Clone and scan an allowlisted remote repo (`--history` optional) |
-| `python main.py scan-targets <targets.yaml>` | Batch scan targets from YAML (`--history` optional) |
-| `python main.py history-scan <path>` | Scan Git commit history for leaks |
-| `python main.py monitor <path>` | Watch a repo for real-time changes |
-| `python main.py report` | Generate an HTML executive report (optional S3 export) |
-| `python main.py aws-check` | Test AWS / LocalStack connectivity |
-| `python main.py dashboard` | Launch the web dashboard |
-| `python main.py demo` | Full demo: test repo → scan → history → report |
-| `python main.py generate-test-repo` | Create a demo test repository |
-
-## Dashboard Pages
-
-| Page | Description |
-|------|-------------|
-| Overview | Executive summary, risk pill, ATT&CK table, top repos, recent scans |
-| Findings | Filterable table of all detected secrets |
-| Analytics | Severity distribution, trends, entropy histogram |
-| History | Secrets found in Git commit history |
-| Rotations | Mock credential rotation actions |
-| Monitoring | Real-time file change events |
-| Reports | Generate and download HTML reports |
-| Logs | Structured audit log viewer |
-| Repositories | Repository stats and scan history |
-
-## Dashboard Screenshots
-
-Capture screenshots after running `python main.py demo` and `python main.py dashboard`.
-
-See **[docs/screenshots/README.md](docs/screenshots/README.md)** for exact filenames and capture steps.
-
-Suggested files: `01-overview.png`, `02-findings.png`, `03-analytics.png`, `04-report.png`
-
----
-
-## ATT&CK Mapping
-
-| Technique | Name | When applied |
-|-----------|------|--------------|
-| T1552 | Unsecured Credentials | Default credential-in-repo finding |
-| T1552.001 | Credentials in Files | API keys, tokens in source/config |
-| T1552.004 | Private Keys | PEM / private key blocks |
-| T1078 | Valid Accounts | High-impact cloud tokens (contextual) |
-
-Findings display technique ID with links to [MITRE ATT&CK](https://attack.mitre.org/) in the dashboard and reports.
-
----
-
-## Detection Pipeline
-
-```
-Repository (local or cloned)
-    → Allowlist check (remote/batch)
-    → File walk + extension filter
-    → Regex pattern matching (25+ types)
-    → Shannon entropy scoring
-    → Risk intelligence enrichment
-        • Severity score (0–100)
-        • Confidence label (High/Medium/Low)
-        • Exposure level + reason
-        • ATT&CK technique mapping
-        • Duplicate grouping
-    → SQLite persistence
-    → Dashboard / Report / Optional AWS export
-```
-
----
-
-## Risk Intelligence
-
-Phase 4 enrichment adds judge-friendly context without ML:
-
-- **Confidence** — pattern strength + entropy + context flags
-- **Exposure** — file sensitivity (e.g. `.env`, `docker-compose`, committed history)
-- **Grouping** — collapses duplicate secrets across files (`occurrence_count`)
-- **Remediation** — actionable text per finding type
-- **Executive summary** — estimated risk, top secret type, cloud credential count
-
----
-
-## Example Findings (Demo Repo)
-
-After `python main.py scan ./test_repo`, expect entries such as:
-
-| Severity | Type | Location |
-|----------|------|----------|
-| Critical | GitHub Token (classic) | `.env` |
-| Critical | OpenAI API Key | `.env` |
-| Critical | Private Key Block | `service_account.json` |
-| High | AWS Access Key | `.env` |
-| High | JWT Token | `notes.txt` |
-
-All values are **fake** and masked in output (e.g. `ghp_********…`).
-
----
-
-## Hybrid Ingestion Architecture
-
-```
-Git Source
-  ├── Local repository path          (e.g. ./test_repo)
-  └── GitHub repository URL          (e.g. https://github.com/user/repo.git)
-        ↓
-Mandatory Allowlist Validation       (allowlist.yaml / targets.yaml)
-        ↓
-Temporary Clone Workspace            (remote only — shallow git clone)
-        ↓
-Existing Scanner + Git History       (reused — no duplicate logic)
-        ↓
-Cleanup Temporary Repository         (always removed after remote scan)
-```
-
-### Allowlist Enforcement
-
-Remote scans **always** require allowlist approval before cloning. Batch scans skip disallowed targets and continue with the rest.
-
-| Allowlist key | Controls |
-|---------------|----------|
-| `allowed_local_paths` | Directories that may be scanned locally or via batch |
-| `allowed_repositories` | Exact GitHub/Git remote URLs (normalized) |
-| `allowed_github_users` | Any repo owned by these GitHub users/orgs |
-
-Edit `allowlist.yaml` (or set `GITGUARD_ALLOWLIST_PATH`) before using `scan-remote` or `scan-targets`.
-
-Optional: set `GITGUARD_ENFORCE_ALLOWLIST=true` to require allowlist approval for `python main.py scan <path>` as well.
-
-### Example `targets.yaml`
-
-```yaml
-allowed_local_paths:
-  - ./test_repo
-
-allowed_repositories:
-  - https://github.com/octocat/Hello-World.git
-
-allowed_github_users:
-  - octocat
-
-scan_targets:
-  local:
-    - ./test_repo
-  repositories:
-    - https://github.com/octocat/Hello-World.git
-```
-
-Copy `targets.yaml.example` to customize. See `allowlist.yaml` for the default allowlist used by `scan-remote`.
-
-## Optional AWS / LocalStack Integration
-
-AWS is **fully optional**. With `GITGUARD_AWS_ENABLED=false` (default), GitGuard runs 100% locally with no cloud calls.
-
-When enabled, the optional export layer provides:
-
-| Feature | Trigger | Config required |
-|---------|---------|-----------------|
-| **S3 report export** | After `python main.py report` | `GITGUARD_S3_BUCKET` |
-| **S3 findings JSON** | Same as above | `GITGUARD_S3_BUCKET` |
-| **SNS Critical alerts** | After any scan with Critical findings | `GITGUARD_SNS_TOPIC_ARN` |
-| **DynamoDB finding sync** | After any scan | `GITGUARD_DYNAMODB_TABLE` |
-
-Object keys use the structure:
-
-```
-s3://<bucket>/reports/<timestamp>/report.html
-s3://<bucket>/reports/<timestamp>/findings.json
-```
-
-SNS messages include repository name, secret type, severity, and **masked preview only** — never full secrets.
-
-### Environment variables
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `GITGUARD_AWS_ENABLED` | `false` | Master switch |
-| `GITGUARD_AWS_REGION` | `ap-south-1` | AWS region |
-| `GITGUARD_AWS_ENDPOINT_URL` | *(empty)* | LocalStack URL e.g. `http://localhost:4566` |
-| `GITGUARD_S3_BUCKET` | *(empty)* | S3 bucket for reports |
-| `GITGUARD_DYNAMODB_TABLE` | *(empty)* | DynamoDB table for findings |
-| `GITGUARD_SNS_TOPIC_ARN` | *(empty)* | SNS topic for Critical alerts |
-| `GITGUARD_ALLOW_REAL_AWS_VALIDATION` | `false` | Allow STS check against real AWS |
-
-### LocalStack Setup (Windows Beginner-Friendly)
-
-AWS export is **optional**. Scans and reports always work locally even if LocalStack is off.
-
-#### Prerequisites
-
-1. **Docker Desktop** must be installed and running (whale icon in system tray).
-2. Python dependencies installed: `pip install -r requirements.txt`
-
-#### Step 1 — Start LocalStack (Docker)
-
-**PowerShell:**
-
-```powershell
-docker run -d -p 4566:4566 --name gitguard-localstack localstack/localstack
-```
-
-**CMD:**
-
-```cmd
-docker run -d -p 4566:4566 --name gitguard-localstack localstack/localstack
-```
-
-> LocalStack may still be starting. Wait **~15–30 seconds** after `docker run`, then continue.
-
-#### Step 2 — Verify LocalStack is healthy
-
-**PowerShell / CMD:**
-
-```powershell
-curl http://localhost:4566/_localstack/health
-```
-
-Or use GitGuard:
-
-```powershell
-python main.py aws-check
-```
-
-You should see `LocalStack is reachable` when healthy.
-
-#### Step 3 — Set environment variables
-
-**PowerShell (current session):**
-
-```powershell
-$env:GITGUARD_AWS_ENABLED = "true"
-$env:GITGUARD_AWS_ENDPOINT_URL = "http://localhost:4566"
-$env:GITGUARD_AWS_REGION = "ap-south-1"
-$env:GITGUARD_S3_BUCKET = "gitguard-reports"
-$env:GITGUARD_DYNAMODB_TABLE = "gitguard-findings"
-$env:GITGUARD_SNS_TOPIC_ARN = "arn:aws:sns:ap-south-1:000000000000:gitguard-alerts"
-```
-
-**CMD (current session):**
-
-```cmd
-set GITGUARD_AWS_ENABLED=true
-set GITGUARD_AWS_ENDPOINT_URL=http://localhost:4566
-set GITGUARD_AWS_REGION=ap-south-1
-set GITGUARD_S3_BUCKET=gitguard-reports
-set GITGUARD_DYNAMODB_TABLE=gitguard-findings
-set GITGUARD_SNS_TOPIC_ARN=arn:aws:sns:ap-south-1:000000000000:gitguard-alerts
-```
-
-Alternatively, copy `.env.example` → `.env` and edit values (loaded automatically).
-
-#### Step 4 — Create SNS topic (optional, for alerts)
-
-**PowerShell / CMD:**
-
-```powershell
-aws --endpoint-url=http://localhost:4566 sns create-topic --name gitguard-alerts --region ap-south-1
-```
-
-#### Step 5 — Test GitGuard with AWS enabled
-
-```powershell
-python main.py aws-check
-python main.py scan ./test_repo
-python main.py report
-python main.py dashboard
-```
-
-If LocalStack is **not running**, scans and reports still succeed — you'll see warnings like:
-
-```
-[WARNING] Could not connect to LocalStack. Skipping AWS exports.
-```
-
-#### Step 6 — Stop / remove LocalStack
-
-**PowerShell / CMD:**
-
-```powershell
-docker stop gitguard-localstack
-docker rm gitguard-localstack
-```
-
-### LocalStack quick setup (summary)
+|:---|:---|
+| `scan <path>` | Scan a local repository for secrets |
+| `scan-remote <url>` | Clone a remote repo and scan (allowlist required) |
+| `scan-targets <file.yaml>` | Batch scan multiple repos from a YAML manifest |
+| `history-scan <path>` | Scan Git commit history for buried secrets |
+| `monitor <path>` | Watch a directory for file changes and re-scan in real time |
+| `report` | Generate an HTML + JSON executive report |
+| `dashboard` | Start the web dashboard at `:5000` |
+| `demo` | End-to-end demo: generate test repo → scan → history scan → report |
+| `generate-test-repo` | Create `test_repo/` populated with fake secrets for testing |
+| `aws-check` | Verify AWS / LocalStack connectivity |
+
+### Example Workflow
 
 ```bash
-docker run -d -p 4566:4566 --name gitguard-localstack localstack/localstack
-# wait ~15-30 seconds
-python main.py aws-check
+# Scan a local project
+python main.py scan ./my-project
+
+# Scan git history (last N commits)
+python main.py history-scan ./my-project
+
+# Generate an executive report
+python main.py report
+# → reports_output/gitguard_report_<timestamp>.html
 ```
 
-When `GITGUARD_AWS_ENDPOINT_URL` is set, GitGuard treats the environment as **LocalStack** and may auto-create the S3 bucket and DynamoDB table if they do not exist. Real AWS validation via STS requires `GITGUARD_ALLOW_REAL_AWS_VALIDATION=true`.
+---
 
-### Cloud-Native flow (optional)
+## Dashboard & Reports
 
-```
-Scanner / Findings
-       ↓
-Optional AWS Export Layer
-   ├── S3  — HTML report + findings JSON
-   ├── SNS — Critical finding alerts
-   └── DynamoDB — finding summaries
-```
+### Web Dashboard — `http://127.0.0.1:5000`
 
-## Architecture Overview
+| Page | What You'll See |
+|:---|:---|
+| **Overview** | Risk pill, executive summary, charts, last scan info, top repos, ATT&CK coverage |
+| **Findings** | Full findings table with severity, confidence, exposure, ATT&CK links, grouped/expandable rows |
+| **Analytics** | Severity & confidence distributions, top secret types, trend over time |
+| **History** | Commit-level secret leaks with author, date, and diff context |
+| **Rotations** | Mock remediation audit log |
+| **Monitoring** | Live file change events |
+| **Reports** | Trigger and download HTML reports |
+| **Logs / Repos** | Audit trail and scan history |
 
-GitGuard follows a **hybrid / cloud-native-ready** layout: the core detection pipeline runs locally today, with optional AWS hooks prepared for future phases.
+**Tech stack:** Flask · Jinja2 · Bootstrap 5 · Chart.js
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Local execution (default)                   │
-│  CLI ─► Ingestion ─► Scanner ─► SQLite ─► Dashboard             │
-│         │                              │                        │
-│         └── Git History / Monitor ─────┘                        │
-│         └── Mock Rotation / Reports ───┘                        │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-              optional (GITGUARD_AWS_ENABLED=true)
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              cloud_export/ — S3 · SNS · DynamoDB                │
-│  Report upload · Critical alerts · Finding sync · LocalStack    │
-└─────────────────────────────────────────────────────────────────┘
-```
+### HTML Reports
 
-### Hybrid / Cloud-Native Design
+Standalone, printable reports that include a risk banner, executive statistics, ATT&CK mapping table, grouped findings, remediation checklist, and MITRE defensive recommendations. Drop them into a Slack thread or email them to stakeholders.
 
-| Layer | Role |
-|-------|------|
-| **CLI & Dashboard** | Primary interface — unchanged whether AWS is on or off |
-| **Scanner / Rotation / Monitor** | Local detection and mock remediation (always available) |
-| **SQLite** | Default persistence — no cloud dependency |
-| **cloud_export/** | Optional S3, SNS, DynamoDB integrations |
-
-### AWS Optionality
-
-AWS is **off by default**. Set `GITGUARD_AWS_ENABLED=true` only when you are ready to wire cloud resources. If `boto3` is missing or credentials are unset, GitGuard continues in local mode with logged warnings — no crashes.
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `GITGUARD_AWS_ENABLED` | `false` | Master switch for AWS features |
-| `GITGUARD_AWS_REGION` | `ap-south-1` | AWS region |
-| `GITGUARD_AWS_ENDPOINT_URL` | *(empty)* | Custom endpoint (e.g. LocalStack) |
-| `GITGUARD_S3_BUCKET` | *(empty)* | Future report export target |
-| `GITGUARD_DYNAMODB_TABLE` | *(empty)* | Future findings sync target |
-| `GITGUARD_SNS_TOPIC_ARN` | *(empty)* | Future alert notifications |
-| `GITGUARD_ALLOW_REAL_AWS_VALIDATION` | `false` | Allow STS connectivity checks |
-
-Copy `.env.example` to `.env` to override defaults locally. Existing constants in `config.py` (paths, scanner thresholds, Flask settings) are unchanged.
+---
 
 ## Project Structure
 
 ```
 gitguard/
-├── main.py                 # CLI entry point
-├── config.py               # Local + optional AWS configuration
-├── requirements.txt        # Python dependencies
-├── cloud_export/           # Optional AWS export (S3, SNS, DynamoDB)
-│   ├── aws_client.py       # boto3 client + LocalStack support
-│   └── export.py           # Post-scan / post-report orchestration
-├── scanner/                # Multi-threaded file scanner
-│   └── repo_ingestion.py   # Hybrid ingestion + allowlist enforcement
-├── allowlist.yaml          # Default scan allowlist
-├── targets.yaml.example    # Batch scan template
-├── regex_engine/           # 25+ secret detection patterns
-├── entropy/                # Shannon entropy analysis
-├── git_history/            # Git commit history scanner
-├── rotation/               # Mock validation & rotation
-├── monitor/                # Watchdog + polling file monitor
-├── dashboard/              # Flask web application
-├── reports/                # HTML report generator
-├── database/               # SQLite persistence layer
-├── templates/              # Jinja2 dashboard templates
-├── utils/                  # Masking & logging utilities
-└── test_repo_gen.py        # Demo repository generator
+├── main.py                ← CLI entry point
+├── config.py              ← Settings + env vars
+├── allowlist.yaml         ← Approved scan targets
+├── targets.yaml           ← Batch scan manifest
+├── gitguard.db            ← SQLite database (auto-created)
+│
+├── scanner/               ← File scanning + repo clone + allowlist
+├── regex_engine/          ← 25+ secret detection patterns
+├── entropy/               ← Shannon entropy scoring
+├── risk_intel/            ← Severity, ATT&CK mapping, grouping
+├── git_history/           ← Commit history scanning
+├── database/              ← Schema, queries, migrations
+├── dashboard/             ← Flask web application
+├── reports/               ← HTML report generator (Jinja2)
+├── rotation/              ← Mock credential rotation
+├── monitor/               ← File watcher (Watchdog)
+├── cloud_export/          ← Optional S3 / SNS / DynamoDB
+├── templates/             ← Dashboard HTML templates
+├── utils/                 ← Masking, logging helpers
+├── test_repo/             ← Demo repo with fake secrets
+├── test_repo_gen.py       ← Generates test_repo
+├── reports_output/        ← Generated report files
+└── docs/                  ← PROJECT_GUIDE.md and docs
 ```
 
-## Tech Stack
+---
 
-- **Python 3.11+** — core language
-- **Flask** — web dashboard
-- **GitPython** — Git history analysis
-- **watchdog** — filesystem monitoring
-- **Rich** — terminal UI
-- **SQLite** — local database (default persistence)
-- **Chart.js** — dashboard visualizations
-- **Bootstrap 5** — responsive dark theme
-- **python-dotenv** — optional `.env` loading
-- **PyYAML** — allowlist and batch target configuration
-- **boto3** — optional AWS SDK (unused when AWS disabled)
+## Security & Safety
+
+- **Secrets are never stored in full.** Only masked previews (`ghp_abc…` → `ghp_********…`) are saved to the database, displayed on the dashboard, and included in reports.
+- **Allowlists** prevent scanning arbitrary external repositories. Required for `scan-remote` and `scan-targets`.
+- **Cloud failures are non-blocking** — scans complete even if AWS/LocalStack is unreachable.
+
+---
+
+## Configuration
+
+Settings live in `config.py` and can be overridden with environment variables or a `.env` file.
+
+| Variable | Default | Effect |
+|:---|:---|:---|
+| `GITGUARD_AWS_ENABLED` | `false` | Enable cloud export (S3, SNS, DynamoDB) |
+| `GITGUARD_AWS_ENDPOINT_URL` | — | LocalStack endpoint (e.g. `http://localhost:4566`) |
+| `GITGUARD_ENFORCE_ALLOWLIST` | `false` | Require allowlist even for local scans |
+| `ENTROPY_THRESHOLD` | `4.5` | Minimum entropy to flag a match as a real secret |
+| `FLASK_PORT` | `5000` | Dashboard server port |
+
+---
+
+## Database
+
+GitGuard uses a local SQLite database (`gitguard.db`, auto-created on first run).
+
+**Core tables:** `repositories`, `scans`, `findings`, `history_findings`, `rotation_actions`, `monitor_events`, `logs`
+
+**Key finding fields:** `secret_type`, `masked_preview`, `severity`, `severity_score`, `confidence_label`, `confidence_score`, `attack_technique`, `attack_name`, `attack_tactic`, `exposure_level`, `exposure_reason`, `occurrence_count`, `remediation`
+
+---
+
+## MITRE ATT&CK Coverage
+
+| Technique ID | Name | Typical Trigger |
+|:---|:---|:---|
+| T1552 | Unsecured Credentials | Default mapping for detected secrets |
+| T1552.001 | Credentials in Files | API keys, tokens, passwords found in source code |
+| T1552.004 | Private Keys | PEM / RSA private key blocks |
+
+Every finding on the dashboard links directly to the corresponding [MITRE ATT&CK](https://attack.mitre.org/) page.
+
+---
+
+## Demo Walkthrough (5 Minutes)
+
+1. **Terminal** — Run `python main.py demo` and walk through the findings table
+2. **Browser** — Open the dashboard: Overview → Findings → Analytics
+3. **Report** — Open `reports_output/gitguard_report_*.html` in a browser
+4. **Architecture** — Mention the allowlist system and optional LocalStack cloud integration
+
+---
 
 ## Limitations
 
-This is a **defensive-only** hackathon project:
+- Does **not** revoke or rotate real credentials — rotation is simulated for demo purposes
+- Does **not** rewrite Git history — only detects secrets, does not remove them
+- Does **not** scan all of GitHub — only allowlisted URLs are accepted
+- Does **not** use ML — detection is regex + rules + Shannon entropy
 
-- All credential validation is **mock/simulated** by default
-- All rotation is **simulated** — no actual secrets are changed
-- Runs **locally by default** — remote scanning requires explicit allowlist entries
-- **No mass GitHub crawling** — only configured targets are cloned and scanned
-- Regex/entropy can produce false positives — confidence scoring helps prioritize
-- Designed for **demonstration purposes** at a hackathon
-- Secrets in the test repo are **intentionally fake**
+---
 
-## Future Improvements
+## Glossary
 
-- Pre-commit hook integration and CI pipeline plugins
-- Git history secret removal guidance (BFG/git-filter-repo workflows)
-- Policy-as-code allowlist in organization settings
-- Slack/Teams notification webhooks (beyond SNS)
-- Fine-tuned false-positive suppression rules per repo
-- Role-based dashboard access for multi-user SOC use
+| Term | Definition |
+|:---|:---|
+| **Finding** | A detected (possibly grouped) secret |
+| **Masked preview** | Partially redacted secret shown for safe display |
+| **Allowlist** | Set of approved repositories and paths for scanning |
+| **SOC** | Security Operations Center — the team monitoring threats |
+| **MITRE ATT&CK** | Industry-standard catalog of adversary techniques |
+| **LocalStack** | Local AWS emulator for cloud feature demos |
+| **Grouped finding** | Duplicate secrets merged into a single database row |
+| **Shallow clone** | `git clone --depth 1` used for faster remote scanning |
 
-## Team
+---
 
-Built by Team at Amrita School of Engineering, Bengaluru.
+## Further Reading
 
-## License
+- **[Project Guide](docs/PROJECT_GUIDE.md)** — Deep-dive into every module, data flow, and design decision
+- **[MITRE ATT&CK](https://attack.mitre.org/)** — The framework behind our threat mapping
+- **[LocalStack](https://localstack.cloud/)** — Run cloud features without an AWS account
 
-MIT — built for educational and hackathon purposes.
+---
+
+<div align="center">
+
+**GitGuard** — Defensive secrets detection for secure development.
+
+*Built with Python · Flask · SQLite · Rich · Chart.js*
+
+</div>

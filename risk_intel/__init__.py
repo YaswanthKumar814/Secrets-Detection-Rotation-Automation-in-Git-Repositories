@@ -9,6 +9,7 @@ import re
 from typing import Optional
 
 # --- ATT&CK mapping (dictionary-driven) ---
+# Maps secret types to MITRE ATT&CK IDs for SOC reporting; avoids opaque ML labels.
 ATTACK_MAP: dict[str, dict] = {
     "AWS Access Key": {"id": "T1552.001", "name": "Credentials In Files", "tactic": "Credential Access"},
     "AWS Secret Key": {"id": "T1552.001", "name": "Credentials In Files", "tactic": "Credential Access"},
@@ -49,6 +50,7 @@ FAKE_VALUE_MARKERS = re.compile(
     r"sk-test|AKIAFAKE|notreal|changeme)"
 )
 
+# Per-type remediation hints shown in dashboard/reports (educational, not automated fixes).
 REMEDIATION: dict[str, str] = {
     "AWS Access Key": "Rotate the IAM access key in AWS Console, revoke the exposed key, and move secrets to AWS Secrets Manager.",
     "AWS Secret Key": "Rotate IAM secret key immediately, audit CloudTrail for misuse, and use Secrets Manager or SSM Parameter Store.",
@@ -100,6 +102,7 @@ def _file_sensitivity(file_path: str) -> tuple[int, str]:
 
 def _context_analysis(line: str, matched_text: str, file_path: str) -> dict:
     """Detect likely false-positive context."""
+    # Example/test markers and doc paths lower confidence — reduces noisy demo results.
     flags: list[str] = []
     penalty = 0
 
@@ -133,6 +136,7 @@ def compute_confidence(
     context: dict,
 ) -> tuple[int, str, float]:
     """Return (score 0-100, label High/Medium/Low, numeric 0-1)."""
+    # Rule-based score: entropy + cloud type + sensitive path boost; context penalties reduce FPs.
     score = 45
     if entropy >= 4.5:
         score += 15
@@ -309,6 +313,7 @@ def _fingerprint(finding: dict) -> str:
 
 def group_findings(findings: list[dict]) -> list[dict]:
     """Group duplicate findings; preserve visibility with occurrence counts."""
+    # Same secret in multiple files → one dashboard row; keeps metrics and UI readable.
     groups: dict[str, dict] = {}
 
     for f in findings:

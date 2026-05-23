@@ -1,4 +1,7 @@
-"""Orchestrate optional AWS exports after scans and report generation."""
+"""Orchestrate optional AWS exports after scans and report generation.
+
+All exports are best-effort: failures log a warning and local workflow continues.
+"""
 
 from __future__ import annotations
 

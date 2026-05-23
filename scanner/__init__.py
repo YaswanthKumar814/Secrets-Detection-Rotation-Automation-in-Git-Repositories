@@ -110,6 +110,7 @@ def scan_repository(repo_path: str, db: Database, show_progress: bool = True) ->
             for future in as_completed(futures):
                 raw_findings.extend(future.result())
 
+    # Collapse duplicate secrets before DB insert (see risk_intel.group_findings).
     all_findings = group_findings(raw_findings)
 
     for f in all_findings:

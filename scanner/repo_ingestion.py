@@ -268,6 +268,7 @@ def ingest_target(
     cleanup_needed = False
 
     try:
+        # Mandatory gate: remote/batch targets must appear in allowlist.yaml (safety control).
         if enforce_allowlist:
             passed, reason = allowlist.validate_target(target)
             metadata.allowlist_passed = passed
@@ -279,6 +280,7 @@ def ingest_target(
             metadata.allowlist_reason = "Allowlist enforcement disabled"
 
         if is_remote_target(target):
+            # Shallow clone into temp dir; workspace is always deleted in finally (ingestion flow).
             metadata.repository_url = normalize_repo_url(target)
             workspace = tempfile.mkdtemp(prefix="gitguard_clone_")
             cleanup_needed = True
