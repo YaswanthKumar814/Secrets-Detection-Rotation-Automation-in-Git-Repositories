@@ -740,3 +740,36 @@
 2026-05-23 13:32:42,048 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_133242.html
 2026-05-23 13:32:42,196 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
 2026-05-23 13:32:42,196 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 13:49:41,251 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_134941.html
+2026-05-23 13:49:41,251 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)
+2026-05-23 13:49:54,679 | INFO | [scanner] Starting scan of C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:49:55,209 | INFO | [scanner] Scan complete: 10 files, 31 grouped findings (31 raw)
+2026-05-23 13:49:55,258 | INFO | [rotation] Initiating mock rotation for finding #687 (GitHub Token (classic))
+2026-05-23 13:49:55,310 | INFO | [rotation] Rotation completed for finding #687 (retries: 0)
+2026-05-23 13:49:55,332 | INFO | [rotation] Initiating mock rotation for finding #688 (OpenAI API Key)
+2026-05-23 13:49:55,385 | INFO | [rotation] Rotation completed for finding #688 (retries: 0)
+2026-05-23 13:49:55,412 | INFO | [rotation] Initiating mock rotation for finding #689 (Stripe Secret Key)
+2026-05-23 13:49:55,480 | INFO | [rotation] Rotation completed for finding #689 (retries: 0)
+2026-05-23 13:49:55,503 | INFO | [rotation] Initiating mock rotation for finding #690 (Slack Bot Token)
+2026-05-23 13:49:55,573 | INFO | [rotation] Rotation completed for finding #690 (retries: 0)
+2026-05-23 13:49:55,600 | INFO | [rotation] Initiating mock rotation for finding #691 (Database URL)
+2026-05-23 13:49:55,670 | INFO | [rotation] Rotation completed for finding #691 (retries: 0)
+2026-05-23 13:49:55,713 | INFO | [rotation] Initiating mock rotation for finding #692 (Database URL)
+2026-05-23 13:49:55,792 | INFO | [rotation] Rotation completed for finding #692 (retries: 0)
+2026-05-23 13:49:55,816 | INFO | [rotation] Initiating mock rotation for finding #693 (Private Key Block)
+2026-05-23 13:49:56,019 | INFO | [rotation] Rotation completed for finding #693 (retries: 1)
+2026-05-23 13:49:56,051 | INFO | [rotation] Initiating mock rotation for finding #694 (GitHub OAuth)
+2026-05-23 13:49:56,116 | INFO | [rotation] Rotation completed for finding #694 (retries: 0)
+2026-05-23 13:49:56,138 | INFO | [rotation] Initiating mock rotation for finding #695 (GitLab Token)
+2026-05-23 13:49:56,329 | INFO | [rotation] Rotation completed for finding #695 (retries: 1)
+2026-05-23 13:49:56,395 | INFO | [rotation] Initiating mock rotation for finding #696 (Google API Key)
+2026-05-23 13:49:56,469 | INFO | [rotation] Rotation completed for finding #696 (retries: 0)
+2026-05-23 13:49:56,504 | INFO | [rotation] Initiating mock rotation for finding #697 (SendGrid Key)
+2026-05-23 13:49:56,578 | INFO | [rotation] Rotation completed for finding #697 (retries: 0)
+2026-05-23 13:49:56,612 | INFO | [rotation] Initiating mock rotation for finding #698 (Mailgun Key)
+2026-05-23 13:49:56,674 | INFO | [rotation] Rotation completed for finding #698 (retries: 0)
+2026-05-23 13:49:56,990 | INFO | [history] Scanning commit history for C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\test_repo
+2026-05-23 13:49:58,563 | INFO | [history] History scan complete: 4 commits, 34 leaks found
+2026-05-23 13:49:58,845 | INFO | [report] Report generated: C:\yaswanth\BTECH\Sem 6\Foundations of Cyber Security\Hackathon\gitguard\reports_output\gitguard_report_20260523_134958.html
+2026-05-23 13:49:59,495 | DEBUG | AWS integration disabled (GITGUARD_AWS_ENABLED=false)
+2026-05-23 13:49:59,495 | DEBUG | [aws] Post-report AWS export skipped (AWS disabled)

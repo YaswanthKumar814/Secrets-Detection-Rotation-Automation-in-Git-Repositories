@@ -10,6 +10,7 @@ Usage:
     python main.py report                         Generate an HTML executive report
     python main.py aws-check                      Test AWS / LocalStack connectivity
     python main.py dashboard                      Launch the SOC-style web dashboard
+    python main.py demo                           One-command hackathon demo (scan + history + report)
     python main.py generate-test-repo             Create a demo repo with fake secrets
 """
 
@@ -70,6 +71,31 @@ def _print_findings_table(findings: list[dict], title: str = "Scan Results"):
             str(occ) if occ > 1 else "",
         )
     console.print(table)
+
+
+def _print_scan_summary(findings: list[dict], elapsed: float = 0, title: str = "Scan"):
+    """Compact post-scan statistics for CLI and demo flow."""
+    if not findings:
+        console.print(f"\n[dim]{title}: no secrets detected.[/dim]")
+        return
+    sev = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
+    grouped = 0
+    high_conf = 0
+    for f in findings:
+        sev[f.get("severity", "Low")] = sev.get(f.get("severity", "Low"), 0) + 1
+        if f.get("occurrence_count", 1) > 1:
+            grouped += 1
+        if f.get("confidence_label") == "High":
+            high_conf += 1
+    timing = f" in [cyan]{elapsed:.1f}s[/cyan]" if elapsed else ""
+    console.print(
+        f"\n[bold]{title} summary{timing}:[/bold] "
+        f"{len(findings)} findings | "
+        f"[red]{sev['Critical']} critical[/red] | "
+        f"[yellow]{sev['High']} high[/yellow] | "
+        f"[cyan]{grouped} grouped[/cyan] | "
+        f"[green]{high_conf} high-confidence[/green]"
+    )
 
 
 def _print_history_table(results: list[dict]):
@@ -164,12 +190,15 @@ def cmd_scan(path: str):
     set_db(db)
 
     console.print(f"\n[bold cyan]Scanning:[/bold cyan] {path}\n")
+    t0 = time.time()
     result = scan_repository(path, db)
     findings = result["findings"]
+    elapsed = time.time() - t0
 
     db.add_log("INFO", "scanner", f"Scan complete: {len(findings)} findings in {path}")
 
-    _print_findings_table(findings)
+    _print_findings_table(findings, title="Scan Results")
+    _print_scan_summary(findings, elapsed, "Scan")
 
     crit = [f for f in findings if f["severity"] == "Critical"]
     if crit:
@@ -204,15 +233,18 @@ def cmd_history_scan(path: str):
 
     console.print(f"\n[bold cyan]History scan:[/bold cyan] {path}\n")
 
+    t0 = time.time()
     result = scan_history(path, db)
     if "error" in result:
         console.print(f"[red]Error:[/red] {result['error']}")
         sys.exit(1)
 
     results = result["findings"]
+    elapsed = time.time() - t0
     db.add_log("INFO", "history", f"History scan complete: {len(results)} leaks in {path}")
 
     _print_history_table(results)
+    console.print(f"[dim]History scan completed in {elapsed:.1f}s — {len(results)} leak(s) found.[/dim]")
 
     console.print(f"\n[dim]Results saved. Run 'python main.py dashboard' to view.[/dim]")
 
@@ -471,6 +503,85 @@ def cmd_generate_test_repo():
     console.print(f"[dim]Now run: python main.py scan {repo_path}[/dim]")
 
 
+def cmd_demo():
+    """Run a full hackathon demo: test repo → scan → history → report."""
+    from database import Database
+    from scanner import scan_repository
+    from git_history import scan_history
+    from reports import generate_report
+    from rotation import bulk_rotate_critical
+    from utils.logger import set_db
+    from config import FLASK_HOST, FLASK_PORT
+
+    os.environ["GITGUARD_DEMO_MODE"] = "true"
+    base = os.path.dirname(os.path.abspath(__file__))
+    test_repo = os.path.join(base, "test_repo")
+
+    console.print(Panel(BANNER + "\n[bold green]HACKATHON DEMO MODE[/bold green]", style="bold cyan", border_style="cyan"))
+
+    if not os.path.isdir(test_repo):
+        console.print("\n[cyan]Step 0:[/cyan] Creating demo test repository...")
+        from test_repo_gen import generate_test_repo
+        test_repo = generate_test_repo()
+        console.print(f"[green]✓[/green] Created {test_repo}")
+    else:
+        console.print(f"\n[green]✓[/green] Using existing demo repo: [cyan]{test_repo}[/cyan]")
+
+    db = Database()
+    set_db(db)
+
+    console.print("\n[cyan]Step 1/4:[/cyan] [bold]Scanning repository for secrets...[/bold]")
+    t0 = time.time()
+    scan_result = scan_repository(test_repo, db)
+    findings = scan_result["findings"]
+    _print_findings_table(findings[:12], title="Sample Findings")
+    if len(findings) > 12:
+        console.print(f"[dim]  … plus {len(findings) - 12} more in dashboard[/dim]")
+    _print_scan_summary(findings, time.time() - t0, "File scan")
+
+    crit = [f for f in findings if f["severity"] == "Critical"]
+    if crit:
+        rotations = bulk_rotate_critical(db)
+        console.print(f"[green]✓ Mock rotation:[/green] {len(rotations)} critical credential(s)")
+
+    console.print("\n[cyan]Step 2/4:[/cyan] [bold]Scanning Git commit history...[/bold]")
+    t0 = time.time()
+    hist = scan_history(test_repo, db)
+    if "error" in hist:
+        console.print(f"[yellow]History scan:[/yellow] {hist['error']}")
+    else:
+        hist_findings = hist.get("findings", [])
+        _print_history_table(hist_findings[:8])
+        if len(hist_findings) > 8:
+            console.print(f"[dim]  … plus {len(hist_findings) - 8} more[/dim]")
+        console.print(f"[dim]History scan: {len(hist_findings)} leak(s) in {time.time() - t0:.1f}s[/dim]")
+
+    console.print("\n[cyan]Step 3/4:[/cyan] [bold]Generating executive HTML report...[/bold]")
+    filepath, export_result = generate_report(db)
+    console.print(f"[green]✓ Report:[/green] {filepath}")
+    _print_s3_export_status(export_result)
+
+    console.print("\n[cyan]Step 4/4:[/cyan] [bold]Demo data ready![/bold]")
+    stats = db.get_stats()
+    executive = db.get_executive_summary()
+    console.print(
+        f"  Posture: [bold]{executive['estimated_risk']}[/bold] risk | "
+        f"{stats['total_findings']} findings | "
+        f"{executive['attack_techniques_count']} ATT&CK techniques | "
+        f"{stats['cloud_credentials']} cloud credentials"
+    )
+
+    dash_url = f"http://{FLASK_HOST}:{FLASK_PORT}"
+    console.print(Panel(
+        f"[bold]Launch the SOC dashboard:[/bold]\n\n"
+        f"  [cyan]python main.py dashboard[/cyan]\n\n"
+        f"Then open: [link={dash_url}]{dash_url}[/link]\n\n"
+        f"Show judges: Overview → Findings → Analytics → open report HTML",
+        title="Next step for presentation",
+        border_style="green",
+    ))
+
+
 def main():
     if len(sys.argv) < 2:
         show_help()
@@ -498,6 +609,8 @@ def main():
         cmd_dashboard()
     elif command == "generate-test-repo":
         cmd_generate_test_repo()
+    elif command == "demo":
+        cmd_demo()
     elif command in ("help", "--help", "-h"):
         show_help()
     else:

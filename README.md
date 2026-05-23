@@ -1,10 +1,34 @@
 # 🛡️ GitGuard
 
-**Hybrid Git secret detection pipeline with controlled repository ingestion and defensive allowlist enforcement.**
+**Hybrid Git secret detection pipeline with controlled repository ingestion, risk intelligence, and SOC-style visibility.**
 
-A defensive cybersecurity tool that scans Git repositories for leaked secrets, classifies severity, performs mock credential rotation, and presents results through a SOC-style dashboard. Supports local paths and allowlisted GitHub URLs via shallow clone ingestion.
+A defensive cybersecurity tool that scans Git repositories for leaked secrets, maps findings to MITRE ATT&CK, groups duplicates, performs mock credential rotation, and presents executive-ready analytics through a Flask dashboard and HTML reports.
 
-> Built for a cybersecurity hackathon — local-first, with controlled hybrid ingestion.
+> Built for a cybersecurity hackathon — local-first, presentation-ready, with optional LocalStack cloud export.
+
+---
+
+## Problem Statement
+
+Developers accidentally commit API keys, tokens, and passwords into Git repositories. Once pushed, secrets remain in **current files** and often in **commit history**, enabling credential theft (MITRE ATT&CK T1552). Manual review does not scale; enterprise tools are heavy for demos and labs.
+
+**GitGuard** provides a lightweight, judge-friendly pipeline: detect → classify → map to ATT&CK → group → remediate (mock) → report → visualize.
+
+---
+
+## Threat Model
+
+| Threat | Mitigation in GitGuard |
+|--------|------------------------|
+| Secrets in working tree | Regex + entropy scanner |
+| Secrets in Git history | `history-scan` on commits/diffs |
+| Re-commit after rotation | Real-time `monitor` (watchdog) |
+| Unauthorized repo scanning | `allowlist.yaml` enforcement |
+| Mass GitHub crawling | Only explicit URLs in allowlist/targets |
+| Credential exposure in UI | Masked previews only; no full secrets stored |
+| Cloud dependency for demos | Local SQLite + optional LocalStack |
+
+**Out of scope:** Real credential validation/rotation, production IAM, CI/CD plugins (future work).
 
 ---
 
@@ -21,9 +45,46 @@ A defensive cybersecurity tool that scans Git repositories for leaked secrets, c
 - **HTML Report Generator** — Executive summary with findings, remediation history, and MITRE ATT&CK mapping
 - **Rich CLI** — Beautiful terminal output with progress bars and tables
 - **Demo Repository Generator** — Creates a test repo with realistic fake secrets
+- **One-Command Demo** — `python main.py demo` runs scan + history + report end-to-end
+- **Executive Summary** — Risk posture on dashboard home and HTML reports
 - **Hybrid Repository Ingestion** — Scan local paths or allowlisted GitHub URLs
 - **Mandatory Allowlist** — Remote and batch scans require explicit approval in `allowlist.yaml`
 - **Batch Target Scanning** — Scan multiple repos from `targets.yaml`
+
+---
+
+## 5-Minute Hackathon Demo
+
+**Fastest path** — one command prepares all demo data:
+
+```powershell
+pip install -r requirements.txt
+python main.py demo
+python main.py dashboard
+```
+
+Open **http://127.0.0.1:5000** and walk judges through this order:
+
+| Step | Action | What to say |
+|------|--------|-------------|
+| 1 | **Overview** (`/`) | Executive summary, risk level, ATT&CK coverage, last scan |
+| 2 | **Findings** (`/findings`) | Severity, confidence, exposure, grouped duplicates, remediation |
+| 3 | **Analytics** (`/analytics`) | Severity/confidence charts, top secret types, ATT&CK distribution |
+| 4 | Open `reports_output/gitguard_report_*.html` | Printable executive report for stakeholders |
+| 5 | **History** (`/history`) | Secrets buried in old commits |
+| 6 | *(Optional)* `python main.py aws-check` | LocalStack-safe cloud export story |
+
+**Manual equivalent** (if you prefer step-by-step):
+
+```powershell
+python main.py generate-test-repo
+python main.py scan ./test_repo
+python main.py history-scan ./test_repo
+python main.py report
+python main.py dashboard
+```
+
+---
 
 ## Quick Start
 
@@ -31,7 +92,10 @@ A defensive cybersecurity tool that scans Git repositories for leaked secrets, c
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Generate a demo test repo
+# 2. Run full demo (recommended)
+python main.py demo
+
+# 2b. Or generate a demo test repo manually
 python main.py generate-test-repo
 
 # 3. Scan for secrets (local)
@@ -66,13 +130,14 @@ python main.py dashboard
 | `python main.py report` | Generate an HTML executive report (optional S3 export) |
 | `python main.py aws-check` | Test AWS / LocalStack connectivity |
 | `python main.py dashboard` | Launch the web dashboard |
+| `python main.py demo` | Full demo: test repo → scan → history → report |
 | `python main.py generate-test-repo` | Create a demo test repository |
 
 ## Dashboard Pages
 
 | Page | Description |
 |------|-------------|
-| Overview | Summary stats, severity chart, recent findings |
+| Overview | Executive summary, risk pill, ATT&CK table, top repos, recent scans |
 | Findings | Filterable table of all detected secrets |
 | Analytics | Severity distribution, trends, entropy histogram |
 | History | Secrets found in Git commit history |
@@ -81,6 +146,77 @@ python main.py dashboard
 | Reports | Generate and download HTML reports |
 | Logs | Structured audit log viewer |
 | Repositories | Repository stats and scan history |
+
+## Dashboard Screenshots
+
+Capture screenshots after running `python main.py demo` and `python main.py dashboard`.
+
+See **[docs/screenshots/README.md](docs/screenshots/README.md)** for exact filenames and capture steps.
+
+Suggested files: `01-overview.png`, `02-findings.png`, `03-analytics.png`, `04-report.png`
+
+---
+
+## ATT&CK Mapping
+
+| Technique | Name | When applied |
+|-----------|------|--------------|
+| T1552 | Unsecured Credentials | Default credential-in-repo finding |
+| T1552.001 | Credentials in Files | API keys, tokens in source/config |
+| T1552.004 | Private Keys | PEM / private key blocks |
+| T1078 | Valid Accounts | High-impact cloud tokens (contextual) |
+
+Findings display technique ID with links to [MITRE ATT&CK](https://attack.mitre.org/) in the dashboard and reports.
+
+---
+
+## Detection Pipeline
+
+```
+Repository (local or cloned)
+    → Allowlist check (remote/batch)
+    → File walk + extension filter
+    → Regex pattern matching (25+ types)
+    → Shannon entropy scoring
+    → Risk intelligence enrichment
+        • Severity score (0–100)
+        • Confidence label (High/Medium/Low)
+        • Exposure level + reason
+        • ATT&CK technique mapping
+        • Duplicate grouping
+    → SQLite persistence
+    → Dashboard / Report / Optional AWS export
+```
+
+---
+
+## Risk Intelligence
+
+Phase 4 enrichment adds judge-friendly context without ML:
+
+- **Confidence** — pattern strength + entropy + context flags
+- **Exposure** — file sensitivity (e.g. `.env`, `docker-compose`, committed history)
+- **Grouping** — collapses duplicate secrets across files (`occurrence_count`)
+- **Remediation** — actionable text per finding type
+- **Executive summary** — estimated risk, top secret type, cloud credential count
+
+---
+
+## Example Findings (Demo Repo)
+
+After `python main.py scan ./test_repo`, expect entries such as:
+
+| Severity | Type | Location |
+|----------|------|----------|
+| Critical | GitHub Token (classic) | `.env` |
+| Critical | OpenAI API Key | `.env` |
+| Critical | Private Key Block | `service_account.json` |
+| High | AWS Access Key | `.env` |
+| High | JWT Token | `notes.txt` |
+
+All values are **fake** and masked in output (e.g. `ghp_********…`).
+
+---
 
 ## Hybrid Ingestion Architecture
 
@@ -287,33 +423,6 @@ Optional AWS Export Layer
    └── DynamoDB — finding summaries
 ```
 
-## Hackathon Demo Flow
-
-A practical 10-minute demo sequence:
-
-```bash
-# 1. Install & generate demo repo
-pip install -r requirements.txt
-python main.py generate-test-repo
-
-# 2. Scan local repo (finds fake secrets)
-python main.py scan ./test_repo
-
-# 3. Scan allowlisted remote repo (optional, needs network)
-python main.py scan-remote https://github.com/octocat/Hello-World.git
-
-# 4. Generate HTML report (local)
-python main.py report
-
-# 5. Optional: export to LocalStack S3 + SNS alerts (with .env configured)
-#    Re-run scan after enabling AWS to trigger SNS for Critical findings
-python main.py scan ./test_repo
-python main.py report
-
-# 6. Open SOC dashboard
-python main.py dashboard
-```
-
 ## Architecture Overview
 
 GitGuard follows a **hybrid / cloud-native-ready** layout: the core detection pipeline runs locally today, with optional AWS hooks prepared for future phases.
@@ -360,10 +469,6 @@ AWS is **off by default**. Set `GITGUARD_AWS_ENABLED=true` only when you are rea
 
 Copy `.env.example` to `.env` to override defaults locally. Existing constants in `config.py` (paths, scanner thresholds, Flask settings) are unchanged.
 
-### LocalStack (Future)
-
-For hackathon demos without real AWS accounts, a future phase will support [LocalStack](https://localstack.cloud/) by pointing `GITGUARD_AWS_ENDPOINT_URL` at `http://localhost:4566`. The `cloud_export/aws_client.py` module already accepts a custom endpoint; full LocalStack workflows are not implemented yet.
-
 ## Project Structure
 
 ```
@@ -405,16 +510,26 @@ gitguard/
 - **PyYAML** — allowlist and batch target configuration
 - **boto3** — optional AWS SDK (unused when AWS disabled)
 
-## Scope & Limitations
+## Limitations
 
 This is a **defensive-only** hackathon project:
 
-- All credential validation is **mock/simulated** by default — no real API calls unless a future phase enables AWS validation with explicit opt-in
+- All credential validation is **mock/simulated** by default
 - All rotation is **simulated** — no actual secrets are changed
 - Runs **locally by default** — remote scanning requires explicit allowlist entries
 - **No mass GitHub crawling** — only configured targets are cloned and scanned
+- Regex/entropy can produce false positives — confidence scoring helps prioritize
 - Designed for **demonstration purposes** at a hackathon
 - Secrets in the test repo are **intentionally fake**
+
+## Future Improvements
+
+- Pre-commit hook integration and CI pipeline plugins
+- Git history secret removal guidance (BFG/git-filter-repo workflows)
+- Policy-as-code allowlist in organization settings
+- Slack/Teams notification webhooks (beyond SNS)
+- Fine-tuned false-positive suppression rules per repo
+- Role-based dashboard access for multi-user SOC use
 
 ## Team
 

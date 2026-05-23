@@ -29,12 +29,21 @@
       <option value="">All Types</option>
     </select>
   </div>
-  <div class="col-md-3 text-end">
+  <div class="col-md-2">
+    <div class="form-check mt-1">
+      <input class="form-check-input" type="checkbox" id="groupedOnly">
+      <label class="form-check-label" for="groupedOnly" style="font-size:0.82rem;color:var(--gg-text-dim)">Grouped only</label>
+    </div>
+  </div>
+  <div class="col-md-1 text-end">
     <span id="countBadge" class="badge rounded-pill" style="background:var(--gg-surface2);color:var(--gg-text);font-size:0.85rem;padding:0.5rem 0.9rem;">
-      {{ findings|length }} grouped finding{{ 's' if findings|length != 1 else '' }}
+      {{ findings|length }}
     </span>
   </div>
 </div>
+<p style="font-size:0.78rem;color:var(--gg-text-dim);margin:-0.5rem 0 0.8rem;">
+  <i class="bi bi-info-circle me-1"></i>Hover remediation for guidance. ATT&CK links open MITRE reference. Expand grouped rows for duplicate details.
+</p>
 
 <div id="findingsEmpty" class="gg-card empty-state" style="display:{% if findings %}none{% else %}block{% endif %};">
   <i class="bi bi-inbox"></i>
@@ -73,10 +82,10 @@
         <span class="conf-badge conf-{{ (f.confidence_label or 'medium')|lower }}">{{ f.confidence_label or 'Medium' }}</span>
         <small class="text-muted mono">{{ f.confidence_score }}%</small>
       </td>
-      <td><span class="exp-badge" title="{{ f.exposure_reason or '' }}">{{ f.exposure_level or '—' }}</span></td>
-      <td class="mono" title="{{ f.attack_name or '' }} — {{ f.attack_tactic or '' }}">{{ f.attack_technique or '—' }}</td>
+      <td><span class="exp-badge exp-{{ (f.exposure_level or 'medium')|lower }}" title="{{ f.exposure_reason or '' }}">{{ f.exposure_level or '—' }}</span></td>
+      <td><a class="attack-link mono" href="https://attack.mitre.org/techniques/{{ (f.attack_technique or 'T1552')|replace('.', '/') }}/" target="_blank" rel="noopener" title="{{ f.attack_name or '' }} — {{ f.attack_tactic or '' }}">{{ f.attack_technique or '—' }}</a></td>
       <td>{% if (f.occurrence_count or 1) > 1 %}<span class="badge" style="background:var(--gg-purple);color:#fff;">{{ f.occurrence_count }}</span>{% else %}1{% endif %}</td>
-      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);">{{ f.remediation or 'Review and rotate if valid.' }}</td>
+      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);" title="{{ f.remediation or 'Review and rotate if valid.' }}">{{ f.remediation or 'Review and rotate if valid.' }}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -105,6 +114,23 @@ function confBadge(label, score) {
   return `<span class="conf-badge conf-${c}">${esc(label || 'Medium')}</span> <small class="mono text-muted">${esc(score != null ? score + '%' : '')}</small>`;
 }
 
+function expBadge(level, reason) {
+  const l = (level || 'medium').toLowerCase();
+  return `<span class="exp-badge exp-${l}" title="${esc(reason)}">${esc(level || '—')}</span>`;
+}
+
+function mitreUrl(tech) {
+  if (!tech) return 'https://attack.mitre.org/techniques/T1552/';
+  const parts = String(tech).split('.');
+  if (parts.length === 2) return `https://attack.mitre.org/techniques/${parts[0]}/${parts[1]}/`;
+  return `https://attack.mitre.org/techniques/${tech}/`;
+}
+
+function attackLink(tech, name, tactic) {
+  const t = tech || 'T1552';
+  return `<a class="attack-link mono" href="${mitreUrl(t)}" target="_blank" rel="noopener" title="${esc(name)} — ${esc(tactic)}">${esc(t)}</a>`;
+}
+
 function renderTable(data) {
   const empty = document.getElementById('findingsEmpty');
   const wrap = document.getElementById('findingsTableWrap');
@@ -121,12 +147,14 @@ function renderTable(data) {
   empty.style.display = 'none';
   wrap.style.display = 'block';
 
-  tbody.innerHTML = data.map(f => {
-    const cnt = f.occurrence_count > 1
-      ? `<span class="badge" style="background:var(--gg-purple);color:#fff;">${f.occurrence_count}</span>`
+  let html = '';
+  data.forEach((f, i) => {
+    const grouped = (f.occurrence_count || 1) > 1;
+    const cnt = grouped
+      ? `<button type="button" class="btn-expand me-1" data-expand="${i}" title="Show grouped details">+</button><span class="badge" style="background:var(--gg-purple);color:#fff;">${f.occurrence_count}</span>`
       : '1';
     const rem = esc(f.remediation || 'Review and rotate if valid.');
-    return `<tr>
+    html += `<tr data-row="${i}">
       <td>${sevBadge(f.severity)}</td>
       <td class="mono">${esc(f.secret_type)}</td>
       <td class="mono" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;" title="${esc(f.file_path)}">${esc(f.file_path)}</td>
@@ -134,12 +162,27 @@ function renderTable(data) {
       <td class="mono" style="color:var(--gg-medium);max-width:140px;overflow:hidden;text-overflow:ellipsis;">${esc(f.masked_preview)}</td>
       <td class="mono">${f.severity_score != null ? esc(f.severity_score) : '—'}</td>
       <td>${confBadge(f.confidence_label, f.confidence_score)}</td>
-      <td><span class="exp-badge" title="${esc(f.exposure_reason)}">${esc(f.exposure_level)}</span></td>
-      <td class="mono" title="${esc(f.attack_name)} — ${esc(f.attack_tactic)}">${esc(f.attack_technique)}</td>
+      <td>${expBadge(f.exposure_level, f.exposure_reason)}</td>
+      <td>${attackLink(f.attack_technique, f.attack_name, f.attack_tactic)}</td>
       <td>${cnt}</td>
-      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);">${rem}</td>
+      <td style="max-width:200px;font-size:0.8rem;color:var(--gg-text-dim);" title="${rem}">${rem}</td>
     </tr>`;
-  }).join('');
+    if (grouped) {
+      const files = f.affected_files ? (typeof f.affected_files === 'string' ? f.affected_files : JSON.stringify(f.affected_files)) : f.file_path;
+      html += `<tr class="finding-detail-row" id="detail-${i}" style="display:none"><td colspan="11"><strong>Grouped occurrences:</strong> ${esc(files)}</td></tr>`;
+    }
+  });
+  tbody.innerHTML = html;
+  tbody.querySelectorAll('.btn-expand').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-expand');
+      const row = document.getElementById('detail-' + id);
+      if (!row) return;
+      const open = row.style.display !== 'none';
+      row.style.display = open ? 'none' : 'table-row';
+      btn.textContent = open ? '+' : '−';
+    });
+  });
 }
 
 let allFindings = INITIAL_FINDINGS;
@@ -159,10 +202,12 @@ function applyFilters() {
   const sev = document.getElementById('severityFilter').value;
   const conf = document.getElementById('confidenceFilter').value;
   const typ = document.getElementById('typeFilter').value;
+  const groupedOnly = document.getElementById('groupedOnly').checked;
   renderTable(allFindings.filter(f =>
     (!sev || f.severity === sev) &&
     (!conf || f.confidence_label === conf) &&
-    (!typ || f.secret_type === typ)
+    (!typ || f.secret_type === typ) &&
+    (!groupedOnly || (f.occurrence_count || 1) > 1)
   ));
 }
 
@@ -182,6 +227,7 @@ async function refreshFindings() {
 document.getElementById('severityFilter').addEventListener('change', applyFilters);
 document.getElementById('confidenceFilter').addEventListener('change', applyFilters);
 document.getElementById('typeFilter').addEventListener('change', applyFilters);
+document.getElementById('groupedOnly').addEventListener('change', applyFilters);
 populateTypeFilter();
 applyFilters();
 refreshFindings();

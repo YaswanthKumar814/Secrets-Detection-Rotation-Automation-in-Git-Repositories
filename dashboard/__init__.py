@@ -18,6 +18,13 @@ app.secret_key = "gitguard-dashboard-local-only"
 db = Database()
 
 
+@app.context_processor
+def _inject_globals():
+    import os
+    demo = os.getenv("GITGUARD_DEMO_MODE", "").strip().lower() in ("1", "true", "yes", "on")
+    return {"demo_mode": demo}
+
+
 def _normalize_finding(row: dict) -> dict:
     """Ensure Phase 4 fields exist for API/templates (backward compatible)."""
     f = dict(row)
@@ -54,7 +61,20 @@ def _json_findings(limit: int = 500, severity: Optional[str] = None) -> list[dic
 def index():
     stats = db.get_stats()
     recent = [_normalize_finding(f) for f in db.get_findings(limit=10)]
-    return render_template("index.html", stats=stats, recent=recent, page="overview")
+    executive = db.get_executive_summary()
+    last_scan = db.get_last_scan()
+    top_repos = db.get_top_repos(limit=5)
+    recent_scans = db.get_scans(limit=5)
+    return render_template(
+        "index.html",
+        stats=stats,
+        recent=recent,
+        executive=executive,
+        last_scan=last_scan,
+        top_repos=top_repos,
+        recent_scans=recent_scans,
+        page="overview",
+    )
 
 
 @app.route("/findings")

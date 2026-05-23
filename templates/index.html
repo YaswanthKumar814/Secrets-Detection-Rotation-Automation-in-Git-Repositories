@@ -1,92 +1,192 @@
 {% extends "base.html" %}
 {% block title %}Overview{% endblock %}
 {% block content %}
-<div class="page-header">
-  <h1><span class="glow-text">🛡️</span> Security Overview</h1>
-  <p>Real-time secrets detection and remediation status</p>
+<div class="page-header d-flex flex-wrap justify-content-between align-items-start gap-2">
+  <div>
+    <h1><span class="glow-text">🛡️</span> Security Overview</h1>
+    <p>Real-time secrets detection, risk intelligence, and remediation status</p>
+  </div>
+  <span class="risk-pill risk-{{ executive.risk_color }}">Risk: {{ executive.estimated_risk }}</span>
 </div>
 
 <div class="row g-3 mb-4">
   <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value">{{ stats.total_findings }}</div><div class="label">Total Findings</div></div></div>
   <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-critical)">{{ stats.critical }}</div><div class="label">Critical</div></div></div>
-  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-high)">{{ stats.high }}</div><div class="label">High</div></div></div>
-  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-accent)">{{ stats.rotations_completed }}</div><div class="label">Rotated</div></div></div>
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-accent)">{{ stats.high_confidence|default(0) }}</div><div class="label">High Confidence</div></div></div>
+  <div class="col-6 col-md-3"><div class="gg-card stat-card"><div class="value" style="color:var(--gg-purple)">{{ executive.attack_techniques_count }}</div><div class="label">ATT&CK Techniques</div></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <div class="gg-card exec-card">
+      <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:1rem;"><i class="bi bi-clipboard-data me-2"></i>Executive Security Summary</h3>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Exposed secrets (grouped)</span><span class="mono">{{ executive.total_exposed_secrets }}</span></div>
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Highest-risk type</span><span class="mono" style="max-width:55%;text-align:right;font-size:0.78rem;">{{ executive.top_secret_type }} ({{ executive.top_secret_type_count }})</span></div>
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Cloud credentials</span><span class="mono" style="color:#74b9ff">{{ executive.cloud_credentials }}</span></div>
+          <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Historical leaks</span><span class="mono" style="color:var(--gg-purple)">{{ executive.history_exposure }}</span></div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Top ATT&CK technique</span>
+            <span class="mono"><a class="attack-link" href="https://attack.mitre.org/techniques/{{ executive.top_attack_technique }}/" target="_blank" rel="noopener">{{ executive.top_attack_technique }}</a> ({{ executive.top_attack_count }})</span></div>
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Repositories scanned</span><span class="mono">{{ executive.repos_scanned }}</span></div>
+          <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Grouped duplicates</span><span class="mono">{{ executive.grouped_findings }}</span></div>
+          <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">High exposure findings</span><span class="mono" style="color:var(--gg-high)">{{ executive.high_exposure }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="gg-card" style="height:100%;">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;"><i class="bi bi-clock-history me-2"></i>Last Scan</h3>
+      {% if last_scan %}
+      <div style="font-size:0.85rem;">
+        <div class="mb-2"><span style="color:var(--gg-text-dim)">Repository</span><br><span class="mono">{{ last_scan.repo_name or last_scan.repo_path or '—' }}</span></div>
+        <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Type</span><span>{{ last_scan.scan_type }}</span></div>
+        <div class="d-flex justify-content-between mb-2"><span style="color:var(--gg-text-dim)">Secrets found</span><span class="mono" style="color:var(--gg-critical)">{{ last_scan.secrets_found or 0 }}</span></div>
+        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Finished</span><span class="mono" style="font-size:0.78rem;">{{ (last_scan.finished_at or last_scan.started_at or '—')[:19] }}</span></div>
+      </div>
+      {% else %}
+      <p style="color:var(--gg-text-dim);font-size:0.85rem;margin:0;">No scans yet. Run <code class="mono">python main.py scan ./test_repo</code></p>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="chart-box" style="height:300px">
+    <div class="chart-box" style="height:280px">
       <h3>Severity Distribution</h3>
       <canvas id="sevChart"></canvas>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="chart-box" style="height:300px">
+    <div class="chart-box" style="height:280px">
       <h3>Top Secret Types</h3>
       <canvas id="typeChart"></canvas>
     </div>
   </div>
   <div class="col-md-4">
-    <div class="gg-card" style="height:300px; overflow-y:auto;">
-      <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:0.8rem;">Quick Stats</h3>
-      <div style="display:flex;flex-direction:column;gap:0.6rem;">
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Repositories</span><span class="mono">{{ stats.repos }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Total Scans</span><span class="mono">{{ stats.scans }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Medium</span><span class="mono" style="color:var(--gg-medium)">{{ stats.medium }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Low</span><span class="mono" style="color:var(--gg-low)">{{ stats.low }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">High Confidence</span><span class="mono" style="color:var(--gg-accent)">{{ stats.high_confidence|default(0) }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Cloud Credentials</span><span class="mono" style="color:#74b9ff">{{ stats.cloud_credentials|default(0) }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">History Leaks</span><span class="mono" style="color:var(--gg-purple)">{{ stats.history_leaks }}</span></div>
-        <div class="d-flex justify-content-between"><span style="color:var(--gg-text-dim)">Rotations Done</span><span class="mono" style="color:var(--gg-accent)">{{ stats.rotations_completed }}</span></div>
+    <div class="gg-card" style="height:280px;overflow-y:auto;">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;">Top Exposed Repositories</h3>
+      {% if top_repos %}
+      {% for repo in top_repos %}
+      {% set pct = [100, (repo.finding_count * 100 / stats.total_findings)|int if stats.total_findings else 0]|min %}
+      <div class="mb-3">
+        <div class="d-flex justify-content-between" style="font-size:0.82rem;">
+          <span class="mono" style="max-width:70%;overflow:hidden;text-overflow:ellipsis;" title="{{ repo.path }}">{{ repo.name or repo.path }}</span>
+          <span>{{ repo.finding_count }} <span style="color:var(--gg-critical);font-size:0.75rem;">({{ repo.critical_count }} crit)</span></span>
+        </div>
+        <div class="heat-bar"><div class="heat-fill" style="width:{{ pct }}%;background:{% if repo.critical_count %}var(--gg-critical){% elif repo.high_exposure_count %}var(--gg-high){% else %}var(--gg-accent){% endif %};"></div></div>
       </div>
+      {% endfor %}
+      {% else %}
+      <p style="color:var(--gg-text-dim);font-size:0.85rem;">No repository exposure data yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="gg-card">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;"><i class="bi bi-list-check me-2"></i>Recent Scans</h3>
+      {% if recent_scans %}
+      <table class="gg-table">
+        <thead><tr><th>ID</th><th>Type</th><th>Findings</th><th>Status</th><th>When</th></tr></thead>
+        <tbody>
+        {% for s in recent_scans %}
+        <tr>
+          <td class="mono">#{{ s.id }}</td>
+          <td>{{ s.scan_type }}</td>
+          <td>{{ s.secrets_found or 0 }}</td>
+          <td><span class="status-badge status-{{ s.status or 'pending' }}">{{ s.status or 'pending' }}</span></td>
+          <td class="mono" style="font-size:0.75rem;">{{ (s.started_at or '')[:16] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:var(--gg-text-dim);font-size:0.85rem;">No scan history.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="gg-card">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;"><i class="bi bi-diagram-3 me-2"></i>ATT&CK Coverage</h3>
+      {% if stats.by_attack %}
+      <table class="gg-table">
+        <thead><tr><th>Technique</th><th>Name</th><th>Count</th></tr></thead>
+        <tbody>
+        {% for a in stats.by_attack[:6] %}
+        <tr>
+          <td><a class="attack-link mono" href="https://attack.mitre.org/techniques/{{ a.attack_technique }}/" target="_blank" rel="noopener">{{ a.attack_technique }}</a></td>
+          <td style="font-size:0.8rem;">{{ a.attack_name or '—' }}</td>
+          <td class="mono">{{ a.count }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:var(--gg-text-dim);font-size:0.85rem;">Run a scan to populate ATT&CK mappings.</p>
+      {% endif %}
     </div>
   </div>
 </div>
 
 <div class="gg-card">
-  <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:1rem;"><span class="pulse-dot"></span>Recent Findings</h3>
+  <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:1rem;"><span class="pulse-dot"></span>Recent Findings</h3>
+  {% if recent %}
   <table class="gg-table">
-    <thead><tr><th>File</th><th>Type</th><th>Preview</th><th>Severity</th><th>Confidence</th><th>ATT&CK</th></tr></thead>
+    <thead><tr><th>File</th><th>Type</th><th>Preview</th><th>Severity</th><th>Confidence</th><th>Exposure</th><th>ATT&CK</th></tr></thead>
     <tbody>
     {% for f in recent %}
     <tr>
       <td class="mono">{{ f.file_path }}</td>
       <td>{{ f.secret_type }}</td>
       <td class="mono">{{ f.masked_preview }}</td>
-      <td><span class="sev-badge sev-{{ f.severity|lower }}">{{ f.severity }}</span></td>
-      <td>{{ f.confidence_label or '—' }}</td>
-      <td class="mono">{{ f.attack_technique or '—' }}</td>
+      <td><span class="sev-badge sev-{{ (f.severity or 'low')|lower }}">{{ f.severity }}</span></td>
+      <td><span class="conf-badge conf-{{ (f.confidence_label or 'medium')|lower }}">{{ f.confidence_label or '—' }}</span></td>
+      <td><span class="exp-badge exp-{{ (f.exposure_level or 'medium')|lower }}">{{ f.exposure_level or '—' }}</span></td>
+      <td><a class="attack-link mono" href="https://attack.mitre.org/techniques/{{ f.attack_technique or 'T1552' }}/" target="_blank" rel="noopener">{{ f.attack_technique or '—' }}</a></td>
     </tr>
     {% endfor %}
     </tbody>
   </table>
+  {% else %}
+  <div class="empty-state" style="padding:1.5rem;"><i class="bi bi-inbox"></i><p>No findings yet — run a scan to populate.</p></div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
 const sevData = { Critical: {{ stats.critical }}, High: {{ stats.high }}, Medium: {{ stats.medium }}, Low: {{ stats.low }} };
-new Chart(document.getElementById('sevChart'), {
-  type: 'doughnut',
-  data: {
-    labels: Object.keys(sevData),
-    datasets: [{ data: Object.values(sevData),
-      backgroundColor: ['#ff4c6a','#ff8c42','#f5c542','#58d68d'], borderWidth: 0 }]
-  },
-  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#c9d1d9', padding: 12, font: { size: 11 } } } } }
-});
-
+if (Object.values(sevData).some(v => v > 0)) {
+  new Chart(document.getElementById('sevChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(sevData),
+      datasets: [{ data: Object.values(sevData),
+        backgroundColor: ['#ff4c6a','#ff8c42','#f5c542','#58d68d'], borderWidth: 0 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#c9d1d9', padding: 12, font: { size: 11 } } } } }
+  });
+}
 const typeLabels = {{ stats.by_type | tojson }};
-new Chart(document.getElementById('typeChart'), {
-  type: 'bar',
-  data: {
-    labels: typeLabels.map(t => t.secret_type.length > 15 ? t.secret_type.slice(0,14)+'…' : t.secret_type),
-    datasets: [{ data: typeLabels.map(t => t.count), backgroundColor: '#00e5a0', borderRadius: 4, maxBarThickness: 28 }]
-  },
-  options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-    plugins: { legend: { display: false } },
-    scales: { x: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } }, y: { ticks: { color: '#c9d1d9', font: { size: 10 } }, grid: { display: false } } }
-  }
-});
+if (typeLabels.length) {
+  new Chart(document.getElementById('typeChart'), {
+    type: 'bar',
+    data: {
+      labels: typeLabels.map(t => t.secret_type.length > 15 ? t.secret_type.slice(0,14)+'…' : t.secret_type),
+      datasets: [{ data: typeLabels.map(t => t.count), backgroundColor: '#00e5a0', borderRadius: 4, maxBarThickness: 28 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: '#6e7681' }, grid: { color: '#252a3a' } }, y: { ticks: { color: '#c9d1d9', font: { size: 10 } }, grid: { display: false } } }
+    }
+  });
+}
 </script>
 {% endblock %}

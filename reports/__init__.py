@@ -44,14 +44,29 @@ REPORT_TEMPLATE = """<!DOCTYPE html>
   .group-note { color: #888; font-size: 0.8rem; }
   .mitre h3 { color: var(--accent); margin-bottom: 0.5rem; }
   .mitre-item { margin: 0.5rem 0; padding: 0.5rem; background: rgba(0,212,170,0.05); border-radius: 4px; }
+  .risk-banner { text-align: center; padding: 1rem; margin: 1rem 0; border-radius: 8px; font-size: 1.1rem; font-weight: 700; }
+  .risk-critical { background: rgba(255,71,87,0.15); color: var(--critical); border: 1px solid var(--critical); }
+  .risk-high { background: rgba(255,140,66,0.15); color: var(--high); }
+  .risk-medium { background: rgba(255,217,61,0.12); color: var(--medium); }
+  .risk-low { background: rgba(107,207,127,0.12); color: var(--low); }
+  .exec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 2rem; margin: 1rem 0; font-size: 0.9rem; }
+  .exec-grid div { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 0.4rem 0; }
+  .header-bar { border-bottom: 2px solid var(--accent); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .remediation-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+  .remediation-box li { margin: 0.4rem 0; }
   .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: #666; font-size: 0.8rem; text-align: center; }
   @media print { body { background: #fff; color: #333; } .stat-card { border: 1px solid #ddd; } th { background: #f5f5f5; color: #333; } }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>🛡️ GitGuard Security Report</h1>
-  <p class="meta">Generated: {{ generated_at }} | Repositories scanned: {{ stats.repos }} | Total scans: {{ stats.scans }}</p>
+  <div class="header-bar">
+    <h1>🛡️ GitGuard Security Report</h1>
+    <p class="meta">Generated: {{ generated_at }} | Report ID: {{ report_id }}</p>
+    <p class="meta">Repositories scanned: {{ stats.repos }} | Total scans: {{ stats.scans }} | Scan sources: local paths, allowlisted remotes</p>
+  </div>
+
+  <div class="risk-banner risk-{{ executive.risk_color }}">Estimated Organizational Risk: {{ executive.estimated_risk }}</div>
 
   <h2>Executive Summary</h2>
   <div class="stats-grid">
@@ -64,6 +79,23 @@ REPORT_TEMPLATE = """<!DOCTYPE html>
     <div class="stat-card"><div class="value" style="color:#a78bfa">{{ stats.history_leaks }}</div><div class="label">History Leaks</div></div>
     <div class="stat-card"><div class="value" style="color:var(--accent)">{{ stats.high_confidence|default(0) }}</div><div class="label">High Confidence</div></div>
     <div class="stat-card"><div class="value" style="color:#74b9ff">{{ stats.cloud_credentials|default(0) }}</div><div class="label">Cloud Credentials</div></div>
+  </div>
+  <div class="exec-grid">
+    <div><span>Highest-risk secret type</span><span>{{ executive.top_secret_type }} ({{ executive.top_secret_type_count }})</span></div>
+    <div><span>Top ATT&CK technique</span><span>{{ executive.top_attack_technique }} — {{ executive.top_attack_count }} findings</span></div>
+    <div><span>Grouped duplicate rows</span><span>{{ executive.grouped_findings }}</span></div>
+    <div><span>High exposure findings</span><span>{{ executive.high_exposure }}</span></div>
+  </div>
+
+  <h2>Remediation Guidance</h2>
+  <div class="remediation-box">
+    <ol>
+      <li><strong>Validate</strong> each critical finding — confirm whether the secret is active (mock validation available in dashboard).</li>
+      <li><strong>Rotate</strong> exposed credentials immediately; GitGuard performs mock rotation with audit trail.</li>
+      <li><strong>Remove</strong> secrets from Git history where possible; use <code>history-scan</code> to find buried leaks.</li>
+      <li><strong>Prevent</strong> re-introduction via pre-commit hooks and allowlist-controlled remote scanning.</li>
+      <li><strong>Monitor</strong> repositories continuously with <code>python main.py monitor &lt;path&gt;</code>.</li>
+    </ol>
   </div>
 
   {% if stats.by_attack %}
@@ -157,20 +189,24 @@ def generate_report(db: Database) -> tuple[str, dict]:
     import json as json_mod
 
     stats = db.get_stats()
+    executive = db.get_executive_summary()
     findings = db.get_findings(limit=1000)
     history = db.get_history_findings(limit=200)
     rotations = db.get_rotations(limit=100)
+    last_scan = db.get_last_scan()
 
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     template = Template(REPORT_TEMPLATE)
     html = template.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        report_id=ts,
         stats=stats,
+        executive=executive,
         findings=findings,
         history=history,
         rotations=rotations,
+        last_scan=last_scan,
     )
-
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"gitguard_report_{ts}.html"
     filepath = os.path.join(REPORT_DIR, filename)
     with open(filepath, "w", encoding="utf-8") as f:

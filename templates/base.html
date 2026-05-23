@@ -66,6 +66,24 @@
     .exp-badge { padding: 2px 8px; border-radius: 8px; font-size: 0.72rem; border: 1px solid var(--gg-border); color: var(--gg-text-dim); }
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--gg-text-dim); }
     .empty-state i { font-size: 2.5rem; opacity: 0.4; display: block; margin-bottom: 0.8rem; }
+    .exp-high { background: rgba(255,76,106,0.15); color: var(--gg-critical); border-color: rgba(255,76,106,0.3); }
+    .exp-medium { background: rgba(245,197,66,0.12); color: var(--gg-medium); }
+    .exp-low { background: rgba(88,214,141,0.1); color: var(--gg-low); }
+    .risk-pill { display: inline-block; padding: 0.35rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px; }
+    .risk-critical { background: rgba(255,76,106,0.2); color: var(--gg-critical); }
+    .risk-high { background: rgba(255,140,66,0.2); color: var(--gg-high); }
+    .risk-medium { background: rgba(245,197,66,0.15); color: var(--gg-medium); }
+    .risk-low { background: rgba(0,229,160,0.12); color: var(--gg-accent); }
+    .exec-card { border-left: 3px solid var(--gg-accent); }
+    .heat-bar { height: 6px; border-radius: 3px; background: var(--gg-surface2); overflow: hidden; margin-top: 0.35rem; }
+    .heat-fill { height: 100%; border-radius: 3px; }
+    .demo-banner { background: linear-gradient(90deg, rgba(0,229,160,0.15), rgba(188,140,255,0.1)); border: 1px solid var(--gg-accent); border-radius: 8px; padding: 0.6rem 1rem; margin-bottom: 1.2rem; font-size: 0.85rem; }
+    .attack-link { color: var(--gg-purple); text-decoration: none; border-bottom: 1px dotted var(--gg-purple); }
+    .attack-link:hover { color: var(--gg-accent); border-color: var(--gg-accent); }
+    .finding-detail-row { background: var(--gg-surface2); }
+    .finding-detail-row td { font-size: 0.8rem; color: var(--gg-text-dim); padding-left: 2rem !important; }
+    .btn-expand { background: none; border: 1px solid var(--gg-border); color: var(--gg-text-dim); border-radius: 4px; padding: 0 6px; font-size: 0.75rem; cursor: pointer; }
+    .btn-expand:hover { border-color: var(--gg-accent); color: var(--gg-accent); }
 
     .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
     .status-completed { background: rgba(0,229,160,0.15); color: var(--gg-accent); }
@@ -117,6 +135,12 @@
   </nav>
 
   <div class="main">
+    {% if demo_mode %}
+    <div class="demo-banner">
+      <i class="bi bi-play-circle me-2"></i>
+      <strong>Demo mode</strong> — sample data from <code class="mono">python main.py demo</code>. Safe for presentations; no real credentials are exposed.
+    </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </div>
 

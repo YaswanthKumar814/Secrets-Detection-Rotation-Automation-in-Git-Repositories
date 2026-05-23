@@ -294,6 +294,84 @@ class Database:
                 "recent": recent,
             }
 
+    def get_last_scan(self) -> Optional[dict]:
+        with self._conn() as conn:
+            row = conn.execute(
+                """SELECT s.*, r.name AS repo_name, r.path AS repo_path
+                   FROM scans s
+                   LEFT JOIN repositories r ON s.repo_id = r.id
+                   ORDER BY COALESCE(s.finished_at, s.started_at) DESC LIMIT 1"""
+            ).fetchone()
+            return dict(row) if row else None
+
+    def get_top_repos(self, limit: int = 5) -> list[dict]:
+        with self._conn() as conn:
+            return [dict(r) for r in conn.execute(
+                """SELECT r.id, r.name, r.path,
+                          COUNT(f.id) AS finding_count,
+                          SUM(CASE WHEN f.severity = 'Critical' THEN 1 ELSE 0 END) AS critical_count,
+                          SUM(CASE WHEN f.exposure_level IN ('High', 'Critical') THEN 1 ELSE 0 END) AS high_exposure_count
+                   FROM repositories r
+                   LEFT JOIN findings f ON f.repo_id = r.id
+                   GROUP BY r.id
+                   HAVING finding_count > 0
+                   ORDER BY finding_count DESC
+                   LIMIT ?""",
+                (limit,),
+            ).fetchall()]
+
+    def get_executive_summary(self) -> dict:
+        """Concise security posture summary for dashboard and reports."""
+        stats = self.get_stats()
+        total = stats["total_findings"]
+        critical = stats["critical"]
+        high = stats["high"]
+
+        if critical >= 5 or (critical + high) >= 20:
+            risk = "Critical"
+            risk_color = "critical"
+        elif critical > 0 or high >= 5:
+            risk = "High"
+            risk_color = "high"
+        elif total > 0:
+            risk = "Medium"
+            risk_color = "medium"
+        else:
+            risk = "Low"
+            risk_color = "low"
+
+        top_type = stats["by_type"][0]["secret_type"] if stats["by_type"] else "—"
+        top_type_count = stats["by_type"][0]["count"] if stats["by_type"] else 0
+        top_attack = stats["by_attack"][0] if stats["by_attack"] else None
+
+        with self._conn() as conn:
+            grouped_rows = conn.execute(
+                "SELECT COUNT(*) AS c FROM findings WHERE COALESCE(occurrence_count, 1) > 1"
+            ).fetchone()["c"]
+            high_exposure = conn.execute(
+                """SELECT COUNT(*) AS c FROM findings
+                   WHERE exposure_level IN ('High', 'Critical')"""
+            ).fetchone()["c"]
+
+        return {
+            "estimated_risk": risk,
+            "risk_color": risk_color,
+            "total_exposed_secrets": total,
+            "top_secret_type": top_type,
+            "top_secret_type_count": top_type_count,
+            "cloud_credentials": stats["cloud_credentials"],
+            "history_exposure": stats["history_leaks"],
+            "attack_techniques_count": len(stats["by_attack"]),
+            "top_attack_technique": top_attack["attack_technique"] if top_attack else "—",
+            "top_attack_name": top_attack.get("attack_name", "—") if top_attack else "—",
+            "top_attack_count": top_attack["count"] if top_attack else 0,
+            "repos_scanned": stats["repos"],
+            "total_scans": stats["scans"],
+            "high_confidence": stats["high_confidence"],
+            "grouped_findings": grouped_rows,
+            "high_exposure": high_exposure,
+        }
+
     def clear_all(self):
         with self._conn() as conn:
             for table in ["logs", "rotation_actions", "monitor_events", "history_findings", "findings", "scans", "repositories"]:
